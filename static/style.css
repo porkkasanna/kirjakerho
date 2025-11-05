@@ -1,0 +1,17 @@
+body {
+    background-color: #eee;
+    margin: auto;
+    max-width: 50em;
+}
+
+h1 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 25px;
+    color: #333;
+}
+
+p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    color: #333;
+}
