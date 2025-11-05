@@ -15,18 +15,13 @@
         <a href="/logout">Kirjaudu ulos</a>
     </p>
     {% else %}
-    <form action="/login" method="post">
-        <p>
-            Käyttäjätunnus: <br />
-            <input type="text" name="username" />
-        </p>
-        <p>
-            Salasana: <br />
-            <input type="password" name="password" />
-        </p>
-        <input type="submit" value="Kirjaudu" />
-    </form>
+    <p>
+        <a href="/login">Kirjaudu sisään</a>
+    </p>
     {% endif %}
+
+    <h1> Etusivu </h1>
+    <p> Tervetuloa kirjakerhoon! </p>
 </body>
 
 </html>
