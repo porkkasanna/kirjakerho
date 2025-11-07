@@ -57,7 +57,7 @@ def login():
             session["username"] = username
             sql = "SELECT id FROM users WHERE username = ?"
             user_id = db.query(sql, [username])[0][0]
-            session["user_id"] = str(user_id)
+            session["user_id"] = user_id
             return redirect("/")
         else:
             return "Väärä käyttäjätunnus tai salasana"
@@ -85,3 +85,16 @@ def create_club():
 def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     return render_template("show_club.html", bookclub=bookclub)
+
+@app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
+def edit_club(club_id):
+    bookclub = clubs.get_club(club_id)
+
+    if request.method == "GET":
+        return render_template("edit_club.html", bookclub=bookclub)
+    if request.method == "POST":
+        title = request.form["title"]
+        author = request.form["author"]
+        deadline = request.form["deadline"]
+        clubs.update_club(club_id, title, author, deadline)
+        return redirect("/bookclub/" + str(club_id))

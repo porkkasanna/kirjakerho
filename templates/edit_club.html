@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> {{ bookclub.title }} </title>
+    <title>Etusivu</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -23,19 +23,23 @@
         {% endif %}
     </div>
 
-    <h1> {{ bookclub.title }} </h1>
+    <h1>Kirjakerhon muokkaus</h1>
 
-    <p>
-        {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
-    </p>
-    <p>
-        Lähettänyt {{ bookclub.username }}
-    </p>
-    {% if bookclub.user_id == session.user_id %}
-    <p>
-        <a href="/edit_club/{{ bookclub.id }}">Muokkaa</a>
-    </p>
-    {% endif %}
+    <form action="/edit_club/{{bookclub.id}}" method="post">
+        <p>
+            Kirjan nimi: <br />
+            <textarea name="title" rows="1" cols="40">{{bookclub.title}}</textarea>
+        </p>
+        <p>
+            Kirjoittaja: <br />
+            <textarea name="author" rows="1" cols="40">{{bookclub.author}}</textarea>
+        </p>
+        <p>
+            Viimeinen osallistumispäivä: <br />
+            <textarea name="deadline" rows="1" cols="40">{{bookclub.deadline}}</textarea>
+        </p>
+        <input type="submit" value="Lähetä" />
+    </form>
 </body>
 
 </html>
