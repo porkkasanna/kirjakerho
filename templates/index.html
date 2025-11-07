@@ -27,11 +27,14 @@
     <p> Tervetuloa kirjakerhoon! </p>
 
     {% for club in bookclubs %}
-    <p>
-        <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
-    </p>
-    <p>Lähettänyt {{ club.username }}</p>
-    <hr />
+    <div class="box">
+        <p>
+            <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
+        <br />
+        Lähettänyt {{ club.username }}
+        </p>
+    </div>
+    
     {% endfor %}
 </body>
 

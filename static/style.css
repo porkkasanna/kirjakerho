@@ -30,6 +30,15 @@ p {
     text-align: center;
 }
 
+.box {
+    margin: 10px 0px;
+    padding: 0px 8px;
+    border-style: solid;
+    border-color: #ddd;
+    border-width: 2px;
+    border-radius: 10px;
+}
+
 a.mlink {
     text-decoration: none;
     color: rgb(47, 79, 51);
