@@ -15,3 +15,22 @@ p {
     font-size: 15px;
     color: #333;
 }
+
+.menu {
+    width: auto;
+    padding: 8px;
+    margin: 10px 100px;
+    background-color: #ddd;
+    border-style: solid;
+    border-color: #aaa;
+    border-width: 2px;
+    border-radius: 20px 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    text-align: center;
+}
+
+a.mlink {
+    text-decoration: none;
+    color: rgb(47, 79, 51);
+}

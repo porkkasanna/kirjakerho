@@ -7,9 +7,25 @@
 </head>
 
 <body>
-    <p>
-        <a href="/">Takaisin etusivulle</a>
-    </p>
+    <div class="menu">
+        <a class="mlink" href="/">Etusivu</a> |
+        <a class="mlink" href="/">Haku</a> |
+
+        {% if session.username %}
+        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
+        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
+        {% else %}
+        <a class="mlink" href="/register">Rekisteröidy</a> |
+        <a class="mlink" href="/login">Kirjaudu sisään</a> 
+        {% endif %}
+        {% if session.username %}
+        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
+        {% endif %}
+    </div>
+
+    {% if session.username %}
+    <p> <a href="/logout">Kirjaudu ulos</a> luodaksesi uuden tunnuksen. </p>
+    {% else %}
     <form action="/create_user" method="post">
         <p>
             Käyttäjätunnus: <br />
@@ -25,6 +41,7 @@
         </p>
         <input type="submit" value="Luo tunnus" />
     </form>
+    {% endif %}
 </body>
 
 </html>

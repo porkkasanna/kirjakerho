@@ -7,18 +7,23 @@
 </head>
 
 <body>
-    <p>
-        <a href="/">Takaisin etusivulle</a>
-    </p>
-    <p>
-        <a href="/register">Rekisteröidy</a>
-    </p>
-    {% if session.username %}
-    <p> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-    <p>
-        <a href="/logout">Kirjaudu ulos</a>
-    </p>
+    <div class="menu">
+        <a class="mlink" href="/">Etusivu</a> |
+        <a class="mlink" href="/">Haku</a> |
 
+        {% if session.username %}
+        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
+        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
+        {% else %}
+        <a class="mlink" href="/register">Rekisteröidy</a> |
+        <a class="mlink" href="/login">Kirjaudu sisään</a> 
+        {% endif %}
+        {% if session.username %}
+        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
+        {% endif %}
+    </div>
+
+    {% if session.username %}
     <h1> Luo uusi kirjakerho </h1>
 
     <form action="/create_club" method="post">
