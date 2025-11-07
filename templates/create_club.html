@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Uusi kirjakerho </title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <p>
+        <a href="/">Takaisin etusivulle</a>
+    </p>
+    <p>
+        <a href="/register">Rekisteröidy</a>
+    </p>
+    {% if session.username %}
+    <p> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
+    <p>
+        <a href="/logout">Kirjaudu ulos</a>
+    </p>
+
+    <h1> Luo uusi kirjakerho </h1>
+
+    <form action="/create_club" method="post">
+        <p>
+            Kirjan nimi: <br />
+            <input type="text" name="title" />
+        </p>
+        <p>
+            Kirjoittaja: <br />
+            <input type="text" name="author" />
+        </p>
+        <p>
+            Viimeinen osallistumispäivä: <br />
+            <input type="text" name="deadline" />
+        </p>
+        <input type="submit" value="Luo kirjakerho" />
+    </form>
+
+    {% else %}
+
+    <h1> Luo uusi kirjakerho </h1>
+
+    <p>
+        <a href="/login">Kirjaudu sisään</a>
+    </p>
+
+    {% endif %}
+
+</body>
+
+</html>

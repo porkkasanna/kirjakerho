@@ -5,13 +5,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 import config
 import db
+import clubs
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    bookclubs = clubs.get_clubs()
+    return render_template("index.html", bookclubs=bookclubs)
 
 @app.route("/search")
 def search():
@@ -53,6 +55,9 @@ def login():
 
         if check_password_hash(password_hash, password):
             session["username"] = username
+            sql = "SELECT id FROM users WHERE username = ?"
+            user_id = db.query(sql, [username])[0][0]
+            session["user_id"] = str(user_id)
             return redirect("/")
         else:
             return "Väärä käyttäjätunnus tai salasana"
@@ -60,4 +65,23 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["user_id"]
     return redirect("/")
+
+@app.route("/create_club", methods=["POST", "GET"])
+def create_club():
+    if request.method == "GET":
+        return render_template("create_club.html")
+    if request.method == "POST":
+        user_id = session["user_id"]
+        title = request.form["title"]
+        author = request.form["author"]
+        deadline = request.form["deadline"]
+
+        club_id = clubs.add_club(user_id, title, author, deadline)
+        return redirect("/bookclub/" + str(club_id))
+
+@app.route("/bookclub/<int:club_id>")
+def show_club(club_id):
+    bookclub = clubs.get_club(club_id)
+    return render_template("show_club.html", bookclub=bookclub)

@@ -2,19 +2,19 @@
 <html>
 
 <head>
-    <title>Etusivu</title>
+    <title> {{ bookclub.title }} </title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
     <p>
+        <a href="/">Takaisin etusivulle</a>
+    </p>
+    <p>
         <a href="/register">Rekisteröidy</a>
     </p>
     {% if session.username %}
     <p> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-    <p>
-        <a href="/create_club">Luo uusi kirjakerho</a>
-    </p>
     <p>
         <a href="/logout">Kirjaudu ulos</a>
     </p>
@@ -24,16 +24,14 @@
     </p>
     {% endif %}
 
-    <h1> Etusivu </h1>
-    <p> Tervetuloa kirjakerhoon! </p>
+    <h1> {{ bookclub.title }} </h1>
 
-    {% for club in bookclubs %}
     <p>
-        <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
+        {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
     </p>
-    <p>Lähettänyt {{ club.username }}</p>
-    <hr />
-    {% endfor %}
+    <p>
+        Lähettänyt {{ bookclub.username }}
+    </p>
 </body>
 
 </html>
