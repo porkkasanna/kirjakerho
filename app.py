@@ -98,3 +98,16 @@ def edit_club(club_id):
         deadline = request.form["deadline"]
         clubs.update_club(club_id, title, author, deadline)
         return redirect("/bookclub/" + str(club_id))
+
+@app.route("/remove_club/<int:club_id>", methods=["GET", "POST"])
+def remove_club(club_id):
+    bookclub = clubs.get_club(club_id)
+
+    if request.method == "GET":
+        return render_template("remove_club.html", bookclub=bookclub)
+    if request.method == "POST":
+        if "remove" in request.form:
+            clubs.remove_club(club_id)
+            return redirect("/")
+        else:
+            return redirect("/bookclub/" + str(club_id))

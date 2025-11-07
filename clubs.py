@@ -26,3 +26,7 @@ def update_club(club_id, title, author, deadline):
              SET title = ?, author = ?, deadline = ?
              WHERE id = ?"""
     db.execute(sql, [title, author, deadline, club_id])
+
+def remove_club(club_id):
+    sql = "DELETE FROM bookclubs WHERE id = ?"
+    db.execute(sql, [club_id])

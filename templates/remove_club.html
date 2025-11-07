@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Kirjakerhon muokkaus</title>
+    <title>Kirjakerhon poisto</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -23,22 +23,12 @@
         {% endif %}
     </div>
 
-    <h1>Kirjakerhon muokkaus</h1>
+    <h1>{{bookclub.title}}</h1>
+    <p>Haluatko varmasti poistaa kirjakerhon? Poistamista ei voi peruuttaa.</p>
 
-    <form action="/edit_club/{{bookclub.id}}" method="post">
-        <p>
-            Kirjan nimi: <br />
-            <textarea name="title" rows="1" cols="40">{{bookclub.title}}</textarea>
-        </p>
-        <p>
-            Kirjoittaja: <br />
-            <textarea name="author" rows="1" cols="40">{{bookclub.author}}</textarea>
-        </p>
-        <p>
-            Viimeinen osallistumispäivä: <br />
-            <textarea name="deadline" rows="1" cols="40">{{bookclub.deadline}}</textarea>
-        </p>
-        <input type="submit" value="Lähetä" />
+    <form action="/remove_club/{{bookclub.id}}" method="post">
+        <input type="submit" name="remove" value="Poista kirjakerho">
+        <input type="submit" name="back" value="Peruuta">
     </form>
 </body>
 
