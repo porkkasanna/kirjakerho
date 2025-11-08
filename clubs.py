@@ -12,7 +12,7 @@ def get_club(club_id):
              FROM bookclubs b, users u
              WHERE b.user_id = u.id AND b.id = ?"""
     result = db.query(sql, [club_id])
-    return result[0]
+    return result[0] if result else None
 
 def add_club(user_id, title, author, deadline):
     sql = """INSERT INTO bookclubs (user_id, title, author, deadline, closed)

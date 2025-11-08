@@ -28,11 +28,11 @@
     <form action="/edit_club/{{bookclub.id}}" method="post">
         <p>
             Kirjan nimi: <br />
-            <textarea name="title" rows="1" cols="40">{{bookclub.title}}</textarea>
+            <textarea name="title" rows="1" cols="40" maxlength="50" required>{{bookclub.title}}</textarea>
         </p>
         <p>
             Kirjoittaja: <br />
-            <textarea name="author" rows="1" cols="40">{{bookclub.author}}</textarea>
+            <textarea name="author" rows="1" cols="40" maxlength="50" required>{{bookclub.author}}</textarea>
         </p>
         <p>
             Viimeinen osallistumispäivä: <br />

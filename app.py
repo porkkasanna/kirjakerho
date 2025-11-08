@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, redirect, request, session
+from flask import abort, render_template, redirect, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import sqlite3
@@ -9,6 +9,10 @@ import clubs
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -70,41 +74,71 @@ def logout():
 
 @app.route("/create_club", methods=["POST", "GET"])
 def create_club():
+    require_login()
+
     if request.method == "GET":
         return render_template("create_club.html")
+
     if request.method == "POST":
         user_id = session["user_id"]
         title = request.form["title"]
         author = request.form["author"]
         deadline = request.form["deadline"]
 
-        club_id = clubs.add_club(user_id, title, author, deadline)
+        if not title or not author or len(title) > 50 or len(author) > 50:
+            abort(403)
+
+        try:
+            club_id = clubs.add_club(user_id, title, author, deadline)
+        except sqlite3.IntegrityError:
+            abort(403)
+
         return redirect("/bookclub/" + str(club_id))
 
 @app.route("/bookclub/<int:club_id>")
 def show_club(club_id):
     bookclub = clubs.get_club(club_id)
+    if not bookclub:
+        abort(404)
     return render_template("show_club.html", bookclub=bookclub)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
+    require_login()
     bookclub = clubs.get_club(club_id)
+
+    if not bookclub:
+        abort(404)
+    if bookclub["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("edit_club.html", bookclub=bookclub)
+
     if request.method == "POST":
         title = request.form["title"]
         author = request.form["author"]
         deadline = request.form["deadline"]
+
+        if not title or not author or len(title) > 50 or len(author) > 50:
+            abort(403)
+
         clubs.update_club(club_id, title, author, deadline)
         return redirect("/bookclub/" + str(club_id))
 
 @app.route("/remove_club/<int:club_id>", methods=["GET", "POST"])
 def remove_club(club_id):
+    require_login()
     bookclub = clubs.get_club(club_id)
+
+    if not bookclub:
+        abort(404)
+    if bookclub["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("remove_club.html", bookclub=bookclub)
+
     if request.method == "POST":
         if "remove" in request.form:
             clubs.remove_club(club_id)
