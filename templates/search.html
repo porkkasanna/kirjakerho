@@ -1,58 +1,37 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>Haku</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Haku{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
+{% block content %}
 
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
+<h1>Haku</h1>
+
+<form action="/search" method="get">
+    <p>
+        {% if query %}
+        <input type="text" name="query" value="{{ query }}" />
         {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
+        <input type="text" name="query" />
         {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
-
-    <h1>Haku</h1>
-
-    <form action="/search" method="get">
-        <p>
-            {% if query %}
-            <input type="text" name="query" value="{{ query }}" />
-            {% else %}
-            <input type="text" name="query" />
-            {% endif %}
-            <input type="submit" value="Hae" />
-        </p>
-    </form>
-
-    {% if query %}
-    <h1>Hakutulokset</h1>
-
-    {% if results %}
-    {% for result in results %}
-    <p>
-        <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
-        <br />
-        {{ result.username }}
+        <input type="submit" value="Hae" />
     </p>
-    {% endfor %}
-    {% else %}
-    <p>
-        Hakusanalla <i>{{ query }}</i> ei löytynyt kirjakerhoja.
-    </p>
-    {% endif %}
-    {% endif %}
-</body>
+</form>
 
-</html>
+{% if query %}
+<h1>Hakutulokset</h1>
+
+{% if results %}
+{% for result in results %}
+<p>
+    <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
+    <br />
+    {{ result.username }}
+</p>
+{% endfor %}
+{% else %}
+<p>
+    Hakusanalla <i>{{ query }}</i> ei löytynyt kirjakerhoja.
+</p>
+{% endif %}
+{% endif %}
+{% endblock %}

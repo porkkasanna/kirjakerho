@@ -1,45 +1,25 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>Kirjakerhon muokkaus</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Kirjakerhon muokkaus{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
+{% block content %}
 
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
-        {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
-        {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
+<h1>Kirjakerhon muokkaus</h1>
 
-    <h1>Kirjakerhon muokkaus</h1>
+<form action="/edit_club/{{bookclub.id}}" method="post">
+    <p>
+        Kirjan nimi: <br />
+        <textarea name="title" rows="1" cols="40" maxlength="50" required>{{bookclub.title}}</textarea>
+    </p>
+    <p>
+        Kirjoittaja: <br />
+        <textarea name="author" rows="1" cols="40" maxlength="50" required>{{bookclub.author}}</textarea>
+    </p>
+    <p>
+        Viimeinen osallistumispäivä: <br />
+        <textarea name="deadline" rows="1" cols="40">{{bookclub.deadline}}</textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+</form>
 
-    <form action="/edit_club/{{bookclub.id}}" method="post">
-        <p>
-            Kirjan nimi: <br />
-            <textarea name="title" rows="1" cols="40" maxlength="50" required>{{bookclub.title}}</textarea>
-        </p>
-        <p>
-            Kirjoittaja: <br />
-            <textarea name="author" rows="1" cols="40" maxlength="50" required>{{bookclub.author}}</textarea>
-        </p>
-        <p>
-            Viimeinen osallistumispäivä: <br />
-            <textarea name="deadline" rows="1" cols="40">{{bookclub.deadline}}</textarea>
-        </p>
-        <input type="submit" value="Lähetä" />
-    </form>
-</body>
-
-</html>
+{% endblock %}

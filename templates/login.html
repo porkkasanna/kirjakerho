@@ -1,61 +1,40 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>Kirjaudu sisään</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Kirjaudu sisään{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
-
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
-        {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
-        {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
+{% block content %}
     
-    {% if session.username %}
-    <p> Olet jo kirjautunut sisään käyttäjätunnuksella {{ session.username}} </p>
+{% if session.username %}
+<p> Olet jo kirjautunut sisään käyttäjätunnuksella {{ session.username}} </p>
+<p>
+    <a href="/logout">Kirjaudu ulos</a>
+</p>
+{% else %}
+
+{% for message in get_flashed_messages(category_filter=["message"]) %}
+<div class="message">
+    {{ message }}
+</div>
+{% endfor %}
+
+<h1>Kirjaudu sisään</h1>
+
+{% for message in get_flashed_messages(category_filter=["error"]) %}
+<div class="er_message">
+    {{ message }}
+</div>
+{% endfor %}
+
+<form action="/login" method="post">
     <p>
-        <a href="/logout">Kirjaudu ulos</a>
+        Käyttäjätunnus: <br />
+        <input type="text" name="username" />
     </p>
-    {% else %}
-
-    {% for message in get_flashed_messages(category_filter=["message"]) %}
-    <div class="message">
-        {{ message }}
-    </div>
-    {% endfor %}
-    
-    <h1>Kirjaudu sisään</h1>
-
-    {% for message in get_flashed_messages(category_filter=["error"]) %}
-    <div class="er_message">
-        {{ message }}
-    </div>
-    {% endfor %}
-
-    <form action="/login" method="post">
-        <p>
-            Käyttäjätunnus: <br />
-            <input type="text" name="username" />
-        </p>
-        <p>
-            Salasana: <br />
-            <input type="password" name="password" />
-        </p>
-        <input type="submit" value="Kirjaudu sisään" />
-    </form>
-    {% endif %}
-</body>
-
-</html>
+    <p>
+        Salasana: <br />
+        <input type="password" name="password" />
+    </p>
+    <input type="submit" value="Kirjaudu sisään" />
+</form>
+{% endif %}
+{% endblock %}

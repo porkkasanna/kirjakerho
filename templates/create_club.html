@@ -1,57 +1,34 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title> Uusi kirjakerho </title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Uusi kirjakerho{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
+{% block content %}
 
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
-        {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
-        {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
+<h1> Luo uusi kirjakerho </h1>
 
-    {% if session.username %}
-    <h1> Luo uusi kirjakerho </h1>
-
-    <form action="/create_club" method="post">
-        <p>
-            Kirjan nimi: <br />
-            <input type="text" name="title" maxlength="50" required />
-        </p>
-        <p>
-            Kirjoittaja: <br />
-            <input type="text" name="author" maxlength="50" required />
-        </p>
-        <p>
-            Viimeinen osallistumispäivä: <br />
-            <input type="text" name="deadline" />
-        </p>
-        <input type="submit" value="Luo kirjakerho" />
-    </form>
-
-    {% else %}
-
-    <h1> Luo uusi kirjakerho </h1>
-
+{% if session.username %}
+<form action="/create_club" method="post">
     <p>
-        <a href="/login">Kirjaudu sisään</a>
+        Kirjan nimi: <br />
+        <input type="text" name="title" maxlength="50" required />
     </p>
+    <p>
+        Kirjoittaja: <br />
+        <input type="text" name="author" maxlength="50" required />
+    </p>
+    <p>
+        Viimeinen osallistumispäivä: <br />
+        <input type="text" name="deadline" />
+    </p>
+    <input type="submit" value="Luo kirjakerho" />
+</form>
 
-    {% endif %}
+{% else %}
 
-</body>
+<p>
+    <a href="/login">Kirjaudu sisään</a>
+</p>
 
-</html>
+{% endif %}
+
+{% endblock %}

@@ -1,56 +1,35 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>Rekisteröityminen</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Luo uusi käyttäjätunnus{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
+{% block content %}
 
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
-        {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
-        {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
+<h1>Luo uusi käyttäjätunnus</h1>
 
-    <h1>Luo uusi käyttäjätunnus</h1>
+{% if session.username %}
+<p> <a href="/logout">Kirjaudu ulos</a> luodaksesi uuden tunnuksen. </p>
+{% else %}
 
-    {% if session.username %}
-    <p> <a href="/logout">Kirjaudu ulos</a> luodaksesi uuden tunnuksen. </p>
-    {% else %}
-    
-    {% for message in get_flashed_messages() %}
-    <div class="er_message">
-        {{ message }}
-    </div>
-    {% endfor %}
+{% for message in get_flashed_messages() %}
+<div class="er_message">
+    {{ message }}
+</div>
+{% endfor %}
 
-    <form action="/create_user" method="post">
-        <p>
-            Käyttäjätunnus: <br />
-            <input type="text" name="username" />
-        </p>
-        <p>
-            Salasana: <br />
-            <input type="password" name="password1" />
-        </p>
-        <p>
-            Salasana uudelleen: <br />
-            <input type="password" name="password2" />
-        </p>
-        <input type="submit" value="Luo tunnus" />
-    </form>
-    {% endif %}
-</body>
-
-</html>
+<form action="/create_user" method="post">
+    <p>
+        Käyttäjätunnus: <br />
+        <input type="text" name="username" />
+    </p>
+    <p>
+        Salasana: <br />
+        <input type="password" name="password1" />
+    </p>
+    <p>
+        Salasana uudelleen: <br />
+        <input type="password" name="password2" />
+    </p>
+    <input type="submit" value="Luo tunnus" />
+</form>
+{% endif %}
+{% endblock %}

@@ -1,42 +1,21 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title> {{ bookclub.title }} </title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}{{ bookclub.title }}{% endblock %}
 
-<body>
-    <div class="menu">
-        <a class="mlink" href="/">Etusivu</a> |
-        <a class="mlink" href="/search">Haku</a> |
+{% block content %}
 
-        {% if session.username %}
-        <a class="mlink" href="/create_club">Luo kirjakerho</a> |
-        <a class="mlink" href="/logout">Kirjaudu ulos</a> 
-        {% else %}
-        <a class="mlink" href="/register">Rekisteröidy</a> |
-        <a class="mlink" href="/login">Kirjaudu sisään</a> 
-        {% endif %}
-        {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
-        {% endif %}
-    </div>
+<h1> {{ bookclub.title }} </h1>
 
-    <h1> {{ bookclub.title }} </h1>
-
-    <p>
-        {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
-    </p>
-    <p>
-        Lähettänyt {{ bookclub.username }}
-    </p>
-    {% if bookclub.user_id == session.user_id %}
-    <p>
-        <a href="/edit_club/{{ bookclub.id }}">Muokkaa</a> |
-        <a href="/remove_club/{{ bookclub.id }}">Poista</a>
-    </p>
-    {% endif %}
-</body>
-
-</html>
+<p>
+    {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
+</p>
+<p>
+    Lähettänyt {{ bookclub.username }}
+</p>
+{% if bookclub.user_id == session.user_id %}
+<p>
+    <a href="/edit_club/{{ bookclub.id }}">Muokkaa</a> |
+    <a href="/remove_club/{{ bookclub.id }}">Poista</a>
+</p>
+{% endif %}
+{% endblock %}
