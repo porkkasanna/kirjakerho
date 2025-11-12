@@ -16,6 +16,38 @@ p {
     color: #333;
 }
 
+a.mlink {
+    text-decoration: none;
+    color: rgb(47, 79, 51);
+}
+
+input[type=submit] {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 13px;
+    color: #333;
+    background-color: #ddd;
+    padding: 8px 15px;
+    border-style: solid;
+    border-radius: 20px;
+    border-color: #666;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+input[type=text], input[type=password] {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 13px;
+    color: #333;
+    background-color: #f3f2f2;
+    margin: 8px 0px;
+    padding: 8px;
+    min-width: 30%;
+    border-style: solid;
+    border-radius: 2px;
+    border-color: #666;
+    border-width: 1px;
+}
+
 .menu {
     width: auto;
     padding: 8px;
@@ -39,7 +71,28 @@ p {
     border-radius: 10px;
 }
 
-a.mlink {
-    text-decoration: none;
-    color: rgb(47, 79, 51);
+.er_message {
+    width: 50%;
+    padding: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    color: #333;
+    background-color: rgb(221, 153, 153);
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(192, 57, 57);
+    border-width: 2px;
+}
+
+.message {
+    width: 50%;
+    padding: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    color: #333;
+    background-color: rgb(172, 202, 177);
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(47, 79, 51);
+    border-width: 2px;
 }

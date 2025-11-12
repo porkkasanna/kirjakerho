@@ -39,6 +39,7 @@
     {% if query %}
     <h1>Hakutulokset</h1>
 
+    {% if results %}
     {% for result in results %}
     <p>
         <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
@@ -46,6 +47,11 @@
         {{ result.username }}
     </p>
     {% endfor %}
+    {% else %}
+    <p>
+        Hakusanalla <i>{{ query }}</i> ei löytynyt kirjakerhoja.
+    </p>
+    {% endif %}
     {% endif %}
 </body>
 

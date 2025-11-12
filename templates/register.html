@@ -23,9 +23,18 @@
         {% endif %}
     </div>
 
+    <h1>Luo uusi käyttäjätunnus</h1>
+
     {% if session.username %}
     <p> <a href="/logout">Kirjaudu ulos</a> luodaksesi uuden tunnuksen. </p>
     {% else %}
+    
+    {% for message in get_flashed_messages() %}
+    <div class="er_message">
+        {{ message }}
+    </div>
+    {% endfor %}
+
     <form action="/create_user" method="post">
         <p>
             Käyttäjätunnus: <br />

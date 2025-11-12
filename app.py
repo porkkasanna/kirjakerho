@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import abort, render_template, redirect, request, session
+from flask import abort, flash, render_template, redirect, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import sqlite3
@@ -36,7 +36,8 @@ def create_user():
     password2 = request.form["password2"]
 
     if password1 != password2:
-        return "Salasanat eivät täsmää"
+        flash("Salasanat eivät täsmää", "error")
+        return redirect("/register")
     
     password_hash = generate_password_hash(password1)
 
@@ -44,9 +45,11 @@ def create_user():
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
     except sqlite3.IntegrityError:
-        return "Käyttäjätunnus on varattu"
+        flash("Käyttäjätunnus on varattu", "error")
+        return redirect("/register")
     
-    return "Käyttäjätunnus on luotu"
+    flash("Käyttäjätunnus luotiin onnistuneesti")
+    return redirect("/login")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -57,7 +60,11 @@ def login():
         password = request.form["password"]
         
         sql = "SELECT password_hash FROM users WHERE username = ?"
-        password_hash = db.query(sql, [username])[0][0]
+        try:
+            password_hash = db.query(sql, [username])[0][0]
+        except:
+            flash("Väärä käyttäjätunnus tai salasana", "error")
+            return redirect("/login")
 
         if check_password_hash(password_hash, password):
             session["username"] = username
@@ -66,7 +73,8 @@ def login():
             session["user_id"] = user_id
             return redirect("/")
         else:
-            return "Väärä käyttäjätunnus tai salasana"
+            flash("Väärä käyttäjätunnus tai salasana", "error")
+            return redirect("/login")
 
 @app.route("/logout")
 def logout():

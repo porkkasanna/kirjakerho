@@ -29,6 +29,21 @@
         <a href="/logout">Kirjaudu ulos</a>
     </p>
     {% else %}
+
+    {% for message in get_flashed_messages(category_filter=["message"]) %}
+    <div class="message">
+        {{ message }}
+    </div>
+    {% endfor %}
+    
+    <h1>Kirjaudu sisään</h1>
+
+    {% for message in get_flashed_messages(category_filter=["error"]) %}
+    <div class="er_message">
+        {{ message }}
+    </div>
+    {% endfor %}
+
     <form action="/login" method="post">
         <p>
             Käyttäjätunnus: <br />
@@ -38,7 +53,7 @@
             Salasana: <br />
             <input type="password" name="password" />
         </p>
-        <input type="submit" value="Kirjaudu" />
+        <input type="submit" value="Kirjaudu sisään" />
     </form>
     {% endif %}
 </body>
