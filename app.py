@@ -21,7 +21,9 @@ def index():
 
 @app.route("/search")
 def search():
-    return "Hakusivu"
+    query = request.args.get("query")
+    results = clubs.search(query) if query else []
+    return render_template("search.html", query=query, results=results)
 
 @app.route("/register")
 def register():

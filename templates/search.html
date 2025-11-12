@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> {{ bookclub.title }} </title>
+    <title>Haku</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -23,19 +23,29 @@
         {% endif %}
     </div>
 
-    <h1> {{ bookclub.title }} </h1>
+    <h1>Haku</h1>
 
+    <form action="/search" method="get">
+        <p>
+            {% if query %}
+            <input type="text" name="query" value="{{ query }}" />
+            {% else %}
+            <input type="text" name="query" />
+            {% endif %}
+            <input type="submit" value="Hae" />
+        </p>
+    </form>
+
+    {% if query %}
+    <h1>Hakutulokset</h1>
+
+    {% for result in results %}
     <p>
-        {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
+        <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
+        <br />
+        {{ result.username }}
     </p>
-    <p>
-        Lähettänyt {{ bookclub.username }}
-    </p>
-    {% if bookclub.user_id == session.user_id %}
-    <p>
-        <a href="/edit_club/{{ bookclub.id }}">Muokkaa</a> |
-        <a href="/remove_club/{{ bookclub.id }}">Poista</a>
-    </p>
+    {% endfor %}
     {% endif %}
 </body>
 
