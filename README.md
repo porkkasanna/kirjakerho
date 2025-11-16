@@ -6,5 +6,18 @@
 * käyttäjä pystyy lisäämään, muokkaamaan ja poistamaan ilmoituksia kirjakerhoista
 * käyttäjä näkee muiden luomat ilmoitukset
 * käyttäjä pystyy etsimään ilmoituksia hakusanalla
-* käyttäjä pystyy antamaan arvosteluja kirjakerhon kirjasta
-* sovelluksessa on käyttäjäsivut, jotka näyttävät tilastoja, käyttäjän lisäämät ilmoitukset ja muiden lisäämät kirjakerhot, joihin käyttäjä on osallistunut
+
+## Sovelluksen asennus
+
+Asenna `flask`-kirjasto:
+```
+$ pip install flask
+```
+Luo tietokannan taulut:
+```
+$ sqlite3 database.db < schema.sql
+```
+Käynnistä sovellus seuraavasti:
+
+```
+$ flask run
