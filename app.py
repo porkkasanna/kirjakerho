@@ -35,6 +35,14 @@ def create_user():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
 
+    if len(username) < 1:
+        flash("Käyttäjätunnus on liian lyhyt", "error")
+        return redirect("/register")
+    
+    if len(password1) < 1:
+        flash("Salasana on liian lyhyt", "error")
+        return redirect("/register")
+
     if password1 != password2:
         flash("Salasanat eivät täsmää", "error")
         return redirect("/register")
