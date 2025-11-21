@@ -11,7 +11,7 @@
     <p>
         <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
     <br />
-    Lähettänyt {{ club.username }}
+    Lähettänyt <a href="/user/{{ club.user_id }}">{{ club.username }}</a> 
     </p>
 </div>
 {% endfor %}

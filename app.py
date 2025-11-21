@@ -1,11 +1,12 @@
 from flask import Flask
-from flask import abort, flash, render_template, redirect, request, session
+from flask import abort, flash, make_response, render_template, redirect, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 import sqlite3
 import config
 import db
 import clubs
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -58,6 +59,48 @@ def create_user():
     
     flash("Käyttäjätunnus luotiin onnistuneesti")
     return redirect("/login")
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    bookclubs = users.get_clubs(user_id)
+    return render_template("user.html", user=user, bookclubs=bookclubs)
+
+@app.route("/add_image", methods=["GET", "POST"])
+def add_image():
+    require_login()
+
+    if request.method == "GET":
+        return render_template("add_image.html")
+    
+    if request.method == "POST":
+        file = request.files["image"]
+        user_id = session["user_id"]
+
+        if not file.filename.endswith(".png"):
+            flash("Väärä tiedostomuoto. Käytä PNG-muotoista kuvaa.", "error")
+            return render_template("add_image.html")
+        
+        image = file.read()
+        
+        # if len(image) > 100 * 1024:
+        #     flash("Liian suuri kuva. Suurin kuvan koko on 100*1024 pikseliä")
+        #     return redirect("/add_image/")
+        
+        users.update_image(user_id, image)
+        return redirect("/user/" + str(user_id))
+
+@app.route("/image/<int:user_id>")
+def show_image(user_id):
+    image = users.get_image(user_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/png")
+    return response
 
 @app.route("/login", methods=["POST", "GET"])
 def login():

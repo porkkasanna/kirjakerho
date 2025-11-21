@@ -10,7 +10,7 @@
     {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
 </p>
 <p>
-    Lähettänyt {{ bookclub.username }}
+    Lähettänyt <a href="/user/{{ bookclub.user_id }}">{{ bookclub.username }}</a>
 </p>
 {% if bookclub.user_id == session.user_id %}
 <p>

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+  
+{% if user.has_image %}
+<div class="profile_picture">
+    <img src="/image/{{ user.id }}"
+    alt="Käyttäjän {{user.username}} profiilikuva"
+    width="150"
+    height="150" />
+</div>
+{% else %}
+<div class="no_prof_pic"></div>
+{% endif %}
+
+<h1> {{ user.username }} </h1>
+
+{% if bookclubs|count == 1 %}
+<p> Käyttäjällä on {{ bookclubs | count }} oma kirjakerho. </p>
+{% else %}
+<p> Käyttäjällä on {{ bookclubs | count }} omaa kirjakerhoa. </p>
+{% endif %}
+<p> Käyttäjä on kirjoittanut x arvostelua. </p>
+
+{% if user.id == session.user_id %}
+    {% if user.has_image %}
+    <p><a href="/add_image">Muokkaa profiilikuvaa</a></p>
+    {% else %}
+    <p><a href="/add_image">Lisää profiilikuva</a></p>
+    {% endif %}
+{% else %}
+<br />
+{% endif %}
+
+<br />
+
+<h2>Kirjakerhot</h2>
+
+{% for club in bookclubs %}
+<div class="box">
+    <p>
+        <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
+    </p>
+</div>
+{% endfor %}
+
+<h2>Arvostelut</h2>
+
+<p>Ei vielä yhtään arvostelua.</p>
+
+{% endblock %}

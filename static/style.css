@@ -10,6 +10,12 @@ h1 {
     color: #333;
 }
 
+h2 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 20px;
+    color: #333;
+}
+
 p {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 15px;
@@ -69,6 +75,31 @@ input[type=text], input[type=password] {
     border-color: #ddd;
     border-width: 2px;
     border-radius: 10px;
+}
+
+.profile_picture {
+    width: 150px;
+    height: 150px;
+    margin-right: 15px;
+    padding: 0px;
+    text-align: center;
+    float: left;
+}
+
+.profile_picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: circle(50%);
+}
+
+.no_prof_pic {
+    width: 150px;
+    height: 150px;
+    margin-right: 15px;
+    border-radius: 75px;
+    background-color: #aaa;
+    float: left;
 }
 
 .er_message {

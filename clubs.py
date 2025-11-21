@@ -1,9 +1,9 @@
 import db
 
 def get_clubs():
-    sql = """SELECT b.id, b.title, b.author, b.deadline, u.username
-             FROM bookclubs b, users u
-             WHERE b.user_id = u.id
+    sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username
+             FROM bookclubs b JOIN users u ON b.user_id = u.id
+             GROUP BY b.id
              ORDER BY b.id DESC"""
     return db.query(sql)
 

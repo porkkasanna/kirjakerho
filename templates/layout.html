@@ -19,7 +19,9 @@
         <a class="mlink" href="/login">Kirjaudu sisään</a> 
         {% endif %}
         {% if session.username %}
-        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella {{ session.username }} </p>
+        <p style="font-size: 12px; margin-bottom: 0px;"> Olet kirjautunut sisään käyttäjätunnuksella
+            <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
+        </p>
         {% endif %}
     </div>
 
