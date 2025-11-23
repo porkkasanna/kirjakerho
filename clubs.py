@@ -40,3 +40,15 @@ def search(query):
              ORDER BY b.id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
+
+def add_review(stars, review, club_id, user_id):
+    sql = """INSERT INTO reviews (stars, review, club_id, user_id, sent_at)
+             VALUES (?, ?, ?, ?, datetime('now'))"""
+    db.execute(sql, [stars, review, club_id, user_id])
+
+def get_reviews(club_id):
+    sql = """SELECT r.id, r.stars, r.review, r.sent_at, r.user_id, u.username
+             FROM reviews r, users u
+             WHERE r.user_id = u.id AND r.club_id = ?
+             ORDER BY r.id"""
+    return db.query(sql, [club_id])

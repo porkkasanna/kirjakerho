@@ -85,10 +85,6 @@ def add_image():
         
         image = file.read()
         
-        # if len(image) > 100 * 1024:
-        #     flash("Liian suuri kuva. Suurin kuvan koko on 100*1024 pikseliä")
-        #     return redirect("/add_image/")
-        
         users.update_image(user_id, image)
         return redirect("/user/" + str(user_id))
 
@@ -161,7 +157,8 @@ def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     if not bookclub:
         abort(404)
-    return render_template("show_club.html", bookclub=bookclub)
+    reviews = clubs.get_reviews(club_id)
+    return render_template("show_club.html", bookclub=bookclub, reviews=reviews)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
@@ -206,3 +203,13 @@ def remove_club(club_id):
             return redirect("/")
         else:
             return redirect("/bookclub/" + str(club_id))
+
+@app.route("/new_review", methods=["POST"])
+def new_review():
+    stars = request.form["stars"]
+    review = request.form["review"]
+    club_id = request.form["club_id"]
+    user_id = session["user_id"]
+
+    clubs.add_review(stars, review, club_id, user_id)
+    return redirect("/bookclub" + str(club_id))

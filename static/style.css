@@ -49,7 +49,7 @@ input[type=submit] {
     cursor: pointer;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], textarea {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 13px;
     color: #333;

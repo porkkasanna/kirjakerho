@@ -7,7 +7,7 @@
 <h1> {{ bookclub.title }} </h1>
 
 <p>
-    {{ bookclub.title}}, kirjoittanut {{ bookclub.author }}
+    {{ bookclub.title }}, kirjoittanut {{ bookclub.author }}
 </p>
 <p>
     Lähettänyt <a href="/user/{{ bookclub.user_id }}">{{ bookclub.username }}</a>
@@ -18,4 +18,43 @@
     <a href="/remove_club/{{ bookclub.id }}">Poista</a>
 </p>
 {% endif %}
+
+<h2>Arvostelut</h2>
+
+{% if reviews %}
+{% for review in reviews %}
+<div class="box">
+    <p>
+    Tähdet: {{ review.stars }} <br />
+    Arvostelu: {{ review.review }} <br />
+    Lähettänyt: <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
+    ({{ review.sent_at }})
+    </p>
+</div>
+{% endfor %}
+{% else %}
+<p>Kirjakerholla ei vielä ole arvosteluja.</p>
+{% endif %}
+
+{% if session.username %}
+<h2>Lähetä arvostelu</h2>
+
+<form action="/new_review" method="post">
+    <p>
+        Tähdet: <br />
+        <input type="radio" name="stars" value="1">
+        <input type="radio" name="stars" value="2">
+        <input type="radio" name="stars" value="3">
+        <input type="radio" name="stars" value="4">
+        <input type="radio" name="stars" value="5">
+    </p>
+    <p>
+        Arvostelu: <br />
+        <textarea type="text" name="review" rows="5" cols="40"></textarea>
+    </p>
+    <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
+    <input type="submit" value="Lähetä" />
+</form>
+{% endif %}
+
 {% endblock %}
