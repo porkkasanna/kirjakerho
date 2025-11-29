@@ -6,6 +6,8 @@
 
 <h1> Lisää profiilikuva </h1>
 
+<h2> Valitse tiedostoista </h2>
+
 {% for message in get_flashed_messages(category_filter=["error"]) %}
 <div class="er_message">
     {{ message }}
@@ -17,6 +19,204 @@
         <input type="file" name="image" accept=".png" />
     </p>
     <input type="submit" value="Lähetä" />
+</form>
+
+<h2> Valitse valmiista kuvista </h2>
+
+<form action="/add_image_default", method="post">
+<table>
+    <tr>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image01.png"
+            alt="Profiilikuvavaihtoehto 1"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image01.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image02.png"
+            alt="Profiilikuvavaihtoehto 2"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image02.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image03.png"
+            alt="Profiilikuvavaihtoehto 3"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image03.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image04.png"
+            alt="Profiilikuvavaihtoehto 4"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image04.png" /></div>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image05.png"
+            alt="Profiilikuvavaihtoehto 5"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image05.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image06.png"
+            alt="Profiilikuvavaihtoehto 6"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image06.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image07.png"
+            alt="Profiilikuvavaihtoehto 7"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image07.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image08.png"
+            alt="Profiilikuvavaihtoehto 8"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image08.png" /></div>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image09.png"
+            alt="Profiilikuvavaihtoehto 9"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image09.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image10.png"
+            alt="Profiilikuvavaihtoehto 10"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image10.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image11.png"
+            alt="Profiilikuvavaihtoehto 11"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image11.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image12.png"
+            alt="Profiilikuvavaihtoehto 12"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image12.png" /></div>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image13.png"
+            alt="Profiilikuvavaihtoehto 13"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image13.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image14.png"
+            alt="Profiilikuvavaihtoehto 14"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image14.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image15.png"
+            alt="Profiilikuvavaihtoehto 15"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image15.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image16.png"
+            alt="Profiilikuvavaihtoehto 16"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image16.png" /></div>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image17.png"
+            alt="Profiilikuvavaihtoehto 17"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image17.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image18.png"
+            alt="Profiilikuvavaihtoehto 18"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image18.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image19.png"
+            alt="Profiilikuvavaihtoehto 19"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image19.png" /></div>
+            <br />
+        </td>
+        <td>
+            <div class="choose_default_prof_pic">
+            <img src="/static/image20.png"
+            alt="Profiilikuvavaihtoehto 20"
+            width="150"
+            height="150" />
+            <input type="radio" name="image" value="image20.png" /></div>
+            <br />
+        </td>
+    </tr>
+</table>
+<input type="submit" value="Lähetä" />
 </form>
 
 {% endblock %}

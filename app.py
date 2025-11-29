@@ -97,6 +97,20 @@ def add_image():
         users.update_image(user_id, image)
         return redirect("/user/" + str(user_id))
 
+@app.route("/add_image_default", methods=["POST"])
+def add_image_default():
+    require_login()
+
+    user_id = session["user_id"]
+    filename = "static/" + request.form["image"]
+
+    with open(filename, "rb") as file:
+        image = file.read()
+
+    users.update_image(user_id, image)
+
+    return redirect("/user/" + str(user_id))
+
 @app.route("/image/<int:user_id>")
 def show_image(user_id):
     image = users.get_image(user_id)
