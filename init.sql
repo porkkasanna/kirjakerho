@@ -1,0 +1,22 @@
+DELETE FROM classes;
+
+INSERT INTO classes (title, value) VALUES ("Genre", "fantasia");
+INSERT INTO classes (title, value) VALUES ("Genre", "mysteeri");
+INSERT INTO classes (title, value) VALUES ("Genre", "romanssi");
+INSERT INTO classes (title, value) VALUES ("Genre", "historia");
+INSERT INTO classes (title, value) VALUES ("Genre", "sota");
+INSERT INTO classes (title, value) VALUES ("Genre", "kauhu");
+INSERT INTO classes (title, value) VALUES ("Genre", "jännitys");
+INSERT INTO classes (title, value) VALUES ("Genre", "rikos");
+INSERT INTO classes (title, value) VALUES ("Genre", "tieteiskirjallisuus");
+INSERT INTO classes (title, value) VALUES ("Genre", "huumori");
+INSERT INTO classes (title, value) VALUES ("Genre", "runokokoelma");
+INSERT INTO classes (title, value) VALUES ("Genre", "uskonnollinen");
+INSERT INTO classes (title, value) VALUES ("Genre", "klassikko");
+INSERT INTO classes (title, value) VALUES ("Genre", "nykykirjallisuus");
+INSERT INTO classes (title, value) VALUES ("Genre", "tietokirja");
+INSERT INTO classes (title, value) VALUES ("Genre", "self help");
+INSERT INTO classes (title, value) VALUES ("Genre", "lapset");
+INSERT INTO classes (title, value) VALUES ("Genre", "nuoret");
+INSERT INTO classes (title, value) VALUES ("Genre", "nuoret aikuiset");
+INSERT INTO classes (title, value) VALUES ("Genre", "aikuiset");

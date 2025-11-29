@@ -157,7 +157,8 @@ def create_club():
     require_login()
 
     if request.method == "GET":
-        return render_template("create_club.html")
+        all_classes = clubs.get_all_classes()
+        return render_template("create_club.html", classes=all_classes)
 
     if request.method == "POST":
         user_id = session["user_id"]
@@ -168,8 +169,14 @@ def create_club():
         if not title or not author or len(title) > 50 or len(author) > 50:
             abort(403)
 
+        classes = []
+        for entry in request.form.getlist("classes"):
+            if entry:
+                parts = entry.split(":")
+                classes.append((parts[0], parts[1]))
+
         try:
-            club_id = clubs.add_club(user_id, title, author, deadline)
+            club_id = clubs.add_club(user_id, title, author, deadline, classes)
         except sqlite3.IntegrityError:
             abort(403)
 
@@ -181,12 +188,15 @@ def show_club(club_id):
     if not bookclub:
         abort(404)
     reviews = clubs.get_reviews(club_id)
-    return render_template("show_club.html", bookclub=bookclub, reviews=reviews)
+    classes = clubs.get_classes(club_id)
+    return render_template("show_club.html", bookclub=bookclub, reviews=reviews, classes=classes)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
     require_login()
     bookclub = clubs.get_club(club_id)
+    all_classes = clubs.get_all_classes()
+    club_classes = clubs.get_classes(club_id)
 
     if not bookclub:
         abort(404)
@@ -194,17 +204,27 @@ def edit_club(club_id):
         abort(403)
 
     if request.method == "GET":
-        return render_template("edit_club.html", bookclub=bookclub)
+        return render_template("edit_club.html", bookclub=bookclub, all_classes=all_classes, classes=club_classes)
 
     if request.method == "POST":
         title = request.form["title"]
         author = request.form["author"]
         deadline = request.form["deadline"]
 
-        if not title or not author or len(title) > 50 or len(author) > 50:
+        if not title or not author:
             abort(403)
+        if len(title) > 50 or len(author) > 50:
+            abort(403)
+        if not deadline:
+            deadline = bookclub["deadline"]
+        
+        classes = []
+        for entry in request.form.getlist("classes"):
+            if entry:
+                parts = entry.split(":")
+                classes.append((parts[0], parts[1]))
 
-        clubs.update_club(club_id, title, author, deadline)
+        clubs.update_club(club_id, title, author, deadline, classes)
         return redirect("/bookclub/" + str(club_id))
 
 @app.route("/remove_club/<int:club_id>", methods=["GET", "POST"])

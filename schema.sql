@@ -14,9 +14,17 @@ CREATE TABLE bookclubs (
     closed INTEGER
 );
 
-CREATE TABLE genres (
+CREATE TABLE classes (
     id INTEGER PRIMARY KEY,
-    club_id INTEGER REFERENCES bookclubs
+    title TEXT,
+    value TEXT
+);
+
+CREATE TABLE club_classes (
+    id INTEGER PRIMARY KEY,
+    club_id INTEGER REFERENCES bookclubs,
+    title TEXT,
+    value TEXT
 );
 
 CREATE TABLE reviews (

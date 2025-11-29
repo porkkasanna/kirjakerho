@@ -9,15 +9,38 @@
 <form action="/edit_club/{{bookclub.id}}" method="post">
     <p>
         Kirjan nimi: <br />
-        <textarea name="title" rows="1" cols="40" maxlength="50" required>{{bookclub.title}}</textarea>
+        <textarea name="title" rows="1" cols="40" maxlength="50" required>{{ bookclub.title }}</textarea>
     </p>
     <p>
         Kirjoittaja: <br />
-        <textarea name="author" rows="1" cols="40" maxlength="50" required>{{bookclub.author}}</textarea>
+        <textarea name="author" rows="1" cols="40" maxlength="50" required>{{ bookclub.author }}</textarea>
     </p>
     <p>
-        Viimeinen osallistumispäivä: <br />
-        <textarea name="deadline" rows="1" cols="40">{{bookclub.deadline}}</textarea>
+        Nykyiset genret &ndash;
+        {% for class in classes %}
+        <span class="genres">{{ class.value }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        Genret: <em>jätä tyhjäksi, jos et halua muokata</em>
+        {% for class in all_classes %}
+            {% for option in all_classes[class] %}
+                <div class="check">
+                    <input type="checkbox" name="classes" value="{{ class }}:{{ option }}">
+                    <label for="{{ class }}:{{ option }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+        {% endfor %}
+    </p>
+    <br/><br/><br/><br/><br/><br/>
+    <p>
+        Nykyinen viimeinen osallistumispäivä &ndash; {{ bookclub.deadline }}
+    </p>
+    <p>
+        Viimeinen osallistumispäivä: <em>jätä tyhjäksi, jos et halua muokata</em>
+    </p>
+    <p>
+        <input type="date" name="deadline" />
     </p>
     <input type="submit" value="Lähetä" />
     <input type="submit" name="back" value="Peruuta">

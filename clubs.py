@@ -14,18 +14,31 @@ def get_club(club_id):
     result = db.query(sql, [club_id])
     return result[0] if result else None
 
-def add_club(user_id, title, author, deadline):
+def add_club(user_id, title, author, deadline, classes):
     sql = """INSERT INTO bookclubs (user_id, title, author, deadline, closed)
              VALUES (?, ?, ?, ?, ?)"""
     db.execute(sql, [user_id, title, author, deadline, 0])
     club_id = db.last_insert_id()
+
+    sql = "INSERT INTO club_classes (club_id, title, value) VALUES (?, ?, ?)"
+    for title, value in classes:
+        db.execute(sql, [club_id, title, value])
+
     return club_id
 
-def update_club(club_id, title, author, deadline):
+def update_club(club_id, title, author, deadline, classes):
     sql = """UPDATE bookclubs
              SET title = ?, author = ?, deadline = ?
              WHERE id = ?"""
     db.execute(sql, [title, author, deadline, club_id])
+
+    if len(classes) > 0:
+        sql = "DELETE FROM club_classes WHERE club_id = ?"
+        db.execute(sql, [club_id])
+
+        sql = "INSERT INTO club_classes (club_id, title, value) VALUES (?, ?, ?)"
+        for title, value in classes:
+            db.execute(sql, [club_id, title, value])
 
 def remove_club(club_id):
     sql = "DELETE FROM bookclubs WHERE id = ?"
@@ -69,3 +82,19 @@ def update_review(review_id, stars, content, modified_at):
 def remove_review(review_id):
     sql = "DELETE FROM reviews WHERE id = ?"
     db.execute(sql, [review_id])
+
+def get_all_classes():
+    sql = "SELECT title, value FROM classes ORDER BY id"
+    result = db.query(sql)
+
+    classes = {}
+    for title, value in result:
+        if title not in classes:
+            classes[title] = []
+        classes[title].append(value)
+    
+    return classes
+
+def get_classes(club_id):
+    sql = "SELECT title, value FROM club_classes WHERE club_id = ?"
+    return db.query(sql, [club_id])

@@ -6,11 +6,18 @@
 
 <h1> {{ bookclub.title }} </h1>
 
+{% for class in classes %}
+<span class="genres">{{ class.value }}</span>
+{% endfor %}
+
 <p>
-    {{ bookclub.title }}, kirjoittanut {{ bookclub.author }}
+    Kirjoittanut {{ bookclub.author }}
 </p>
 <p>
-    Lähettänyt <a href="/user/{{ bookclub.user_id }}">{{ bookclub.username }}</a>
+    Viimeinen osallistumispäivä on {{ bookclub.deadline }}
+</p>
+<p>
+    Kirjakerhon omistaja &ndash; <a href="/user/{{ bookclub.user_id }}">{{ bookclub.username }}</a>
 </p>
 {% if bookclub.user_id == session.user_id %}
 <p>

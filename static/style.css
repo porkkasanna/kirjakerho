@@ -63,6 +63,17 @@ input[type=text], input[type=password], textarea {
     border-width: 1px;
 }
 
+.check {
+    width: 180px;
+    padding: 1px;
+    margin: 2px;
+    position: relative;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    color: #333;
+    float: left;
+}
+
 .menu {
     width: auto;
     padding: 8px;
@@ -147,4 +158,21 @@ table {
     border-radius: 5px;
     border-color: rgb(47, 79, 51);
     border-width: 2px;
+}
+
+.genres {
+    width: fit-content;
+    padding: 2px 15px;
+    margin: 5px 1px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(140, 110, 170);
+    border-radius: 8px;
+    background-color: rgb(176, 147, 206);
+    color: #fff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0px 0px 5px rgb(78, 53, 100);
 }
