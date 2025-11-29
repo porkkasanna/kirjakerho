@@ -24,13 +24,36 @@
 {% if reviews %}
 {% for review in reviews %}
 <div class="box">
-    <p>
-    Tähdet: {{ review.stars }} <br />
-    Arvostelu: {{ review.review }} <br />
-    Lähettänyt: <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
-    ({{ review.sent_at }})
+    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
+        {% if review.modified_at != 0 %}
+        </br><em>muokattu {{ review.modified_at }}</em>
+        {% endif %}
     </p>
+    <p style="font-size: 20px;">
+        {% if review.stars == 5 %}
+        ★★★★★
+        {% elif review.stars == 4 %}
+        ★★★★☆
+        {% elif review.stars == 3 %}
+        ★★★☆☆
+        {% elif review.stars == 2 %}
+        ★★☆☆☆
+        {% elif review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+    </p>
+    <p>{{ review.content| show_lines }} </p>
+    <p>
+        &ndash; <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
+    </p>
+    {% if review.user_id == session.user_id %}
+    <p style="font-size: 13px;">
+        <a href="/edit_review/{{ review.id }}">Muokkaa</a> |
+        <a href="/remove_review/{{ review.id }}">Poista</a>
+    </p>
+    {% endif %}
 </div>
+
 {% endfor %}
 {% else %}
 <p>Kirjakerholla ei vielä ole arvosteluja.</p>
@@ -42,15 +65,15 @@
 <form action="/new_review" method="post">
     <p>
         Tähdet: <br />
-        <input type="radio" name="stars" value="1">
-        <input type="radio" name="stars" value="2">
-        <input type="radio" name="stars" value="3">
-        <input type="radio" name="stars" value="4">
-        <input type="radio" name="stars" value="5">
+        <input type="radio" name="stars" value="5"> ★★★★★ <br />
+        <input type="radio" name="stars" value="4"> ★★★★☆ <br />
+        <input type="radio" name="stars" value="3"> ★★★☆☆ <br />
+        <input type="radio" name="stars" value="2"> ★★☆☆☆ <br />
+        <input type="radio" name="stars" value="1"> ★☆☆☆☆ <br />
     </p>
     <p>
         Arvostelu: <br />
-        <textarea type="text" name="review" rows="5" cols="40"></textarea>
+        <textarea type="text" name="content" rows="5" cols="40"></textarea>
     </p>
     <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
     <input type="submit" value="Lähetä" />

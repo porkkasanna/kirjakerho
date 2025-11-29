@@ -1,7 +1,9 @@
 from flask import Flask
 from flask import abort, flash, make_response, render_template, redirect, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
+from time import strftime, localtime
 
+import markupsafe
 import sqlite3
 import config
 import db
@@ -14,6 +16,12 @@ app.secret_key = config.secret_key
 def require_login():
     if "user_id" not in session:
         abort(403)
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 @app.route("/")
 def index():
@@ -206,10 +214,54 @@ def remove_club(club_id):
 
 @app.route("/new_review", methods=["POST"])
 def new_review():
+    require_login()
     stars = request.form["stars"]
-    review = request.form["review"]
+    content = request.form["content"]
     club_id = request.form["club_id"]
     user_id = session["user_id"]
+    sent_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
 
-    clubs.add_review(stars, review, club_id, user_id)
-    return redirect("/bookclub" + str(club_id))
+    clubs.add_review(stars, content, club_id, user_id, sent_at)
+    return redirect("/bookclub/" + str(club_id))
+
+@app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
+def edit_review(review_id):
+    require_login()
+    review = clubs.get_review(review_id)
+
+    if not review:
+        abort(404)
+    if review["user_id"] != session["user_id"]:
+        abort(403)
+    
+    if request.method == "GET":
+        return render_template("edit_review.html", review=review)
+    
+    if request.method == "POST":
+        stars = request.form["stars"]
+        content = request.form["content"]
+        modified_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
+
+        if not stars or not content:
+            abort(403)
+        
+        clubs.update_review(review_id, stars, content, modified_at)
+        return redirect("/bookclub/" + str(review["club_id"]))
+
+@app.route("/remove_review/<int:review_id>", methods=["GET", "POST"])
+def remove_review(review_id):
+    require_login()
+    review = clubs.get_review(review_id)
+
+    if not review:
+        abort(404)
+    if review["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("remove_review.html", review=review)
+
+    if request.method == "POST":
+        if "remove" in request.form:
+            clubs.remove_review(review_id)
+        return redirect("/bookclub/" + str(review["club_id"]))

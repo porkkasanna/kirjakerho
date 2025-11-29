@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}Arvostelun muokkaus{% endblock %}
+
+{% block content %}
+
+<h1>Arvostelun muokkaus</h1>
+
+<form action="/edit_review/{{review.id}}" method="post">
+    <p>
+        Tähdet: <br />
+        {% if review.stars == 5 %}
+        <input type="radio" name="stars" value="5" checked="checked"> ★★★★★ <br />
+        {% else %}
+        <input type="radio" name="stars" value="5"> ★★★★★ <br />
+        {% endif %}
+
+        {% if review.stars == 4 %}
+        <input type="radio" name="stars" value="4" checked="checked"> ★★★★☆ <br />
+        {% else %}
+        <input type="radio" name="stars" value="4"> ★★★★☆ <br />
+        {% endif %}
+
+        {% if review.stars == 3 %}
+        <input type="radio" name="stars" value="3" checked="checked"> ★★★☆☆ <br />
+        {% else %}
+        <input type="radio" name="stars" value="3"> ★★★☆☆ <br />
+        {% endif %}
+
+        {% if review.stars == 2 %}
+        <input type="radio" name="stars" value="2" checked="checked"> ★★☆☆☆ <br />
+        {% else %}
+        <input type="radio" name="stars" value="2"> ★★☆☆☆ <br />
+        {% endif %}
+
+        {% if review.stars == 1 %}
+        <input type="radio" name="stars" value="1" checked="checked"> ★☆☆☆☆ <br />
+        {% else %}
+        <input type="radio" name="stars" value="1"> ★☆☆☆☆ <br />
+        {% endif %}
+    </p>
+    <p>
+        Arvostelu: <br />
+        <textarea type="text" name="content" rows="5" cols="40">{{ review.content }}</textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+    <input type="submit" name="back" value="Peruuta" />
+</form>
+
+{% endblock %}

@@ -24,6 +24,7 @@ CREATE TABLE reviews (
     club_id INTEGER REFERENCES bookclubs,
     user_id INTEGER REFERENCES users,
     stars INTEGER,
-    review TEXT,
-    sent_at TEXT
+    content TEXT,
+    sent_at TEXT,
+    modified_at TEXT
 );

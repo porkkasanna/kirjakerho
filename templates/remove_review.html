@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}Poista arvostelu{% endblock %}
+
+{% block content %}
+
+<h1>Arvostelu</h1>
+<div class="box">
+    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
+        {% if review.modified_at != 0 %}
+        </br><em>muokattu {{ review.modified_at }}</em>
+        {% endif %}
+    </p>
+    <p style="font-size: 20px;">
+        {% if review.stars == 5 %}
+        ★★★★★
+        {% elif review.stars == 4 %}
+        ★★★★☆
+        {% elif review.stars == 3 %}
+        ★★★☆☆
+        {% elif review.stars == 2 %}
+        ★★☆☆☆
+        {% elif review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+    </p>
+    <p>{{ review.content| show_lines }} </p>
+    <p>
+        &ndash; <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
+    </p>
+</div>
+
+<p>Haluatko varmasti poistaa arvostelun? Poistamista ei voi peruuttaa.</p>
+
+<form action="/remove_review/{{ review.id }}" method="post">
+    <input type="submit" name="remove" value="Poista arvostelu">
+    <input type="submit" name="back" value="Peruuta">
+</form>
+{% endblock %}
