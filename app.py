@@ -74,7 +74,8 @@ def show_user(user_id):
     if not user:
         abort(404)
     bookclubs = users.get_clubs(user_id)
-    return render_template("user.html", user=user, bookclubs=bookclubs)
+    reviews = users.get_reviews(user_id)
+    return render_template("user.html", user=user, bookclubs=bookclubs, reviews=reviews)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():

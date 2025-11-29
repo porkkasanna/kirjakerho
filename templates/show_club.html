@@ -23,7 +23,7 @@
 
 {% if reviews %}
 {% for review in reviews %}
-<div class="box">
+<div class="box" id="{{ review.id }}">
     <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
         {% if review.modified_at != 0 %}
         </br><em>muokattu {{ review.modified_at }}</em>

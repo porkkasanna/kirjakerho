@@ -17,12 +17,17 @@
 
 <h1> {{ user.username }} </h1>
 
-{% if bookclubs|count == 1 %}
+{% if bookclubs | count == 1 %}
 <p> Käyttäjällä on {{ bookclubs | count }} oma kirjakerho. </p>
 {% else %}
 <p> Käyttäjällä on {{ bookclubs | count }} omaa kirjakerhoa. </p>
 {% endif %}
-<p> Käyttäjä on kirjoittanut x arvostelua. </p>
+
+{% if reviews | count == 1 %}
+<p> Käyttäjä on kirjoittanut {{ reviews | count }} arvostelun.</p>
+{% else %}
+<p> Käyttäjä on kirjoittanut {{ reviews | count }} arvostelua. </p>
+{% endif %}
 
 {% if user.id == session.user_id %}
     {% if user.has_image %}
@@ -38,16 +43,43 @@
 
 <h2>Kirjakerhot</h2>
 
+{% if not bookclubs %}
+<p>Ei vielä yhtään kirjakerhoa.</p>
+{% else %}
 {% for club in bookclubs %}
 <div class="box">
     <p>
-        <a href="/bookclub/{{ club.id }}">{{club.title}}</a>, {{ club.author }}
+        <a href="/bookclub/{{ club.id }}">{{ club.title }}</a>, {{ club.author }}
     </p>
 </div>
 {% endfor %}
+{% endif %}
 
 <h2>Arvostelut</h2>
 
+{% if not reviews %}
 <p>Ei vielä yhtään arvostelua.</p>
+{% else %}
+{% for review in reviews %}
+<div class="box">
+    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}</p>
+    <p>
+        {% if review.stars == 5 %}
+        ★★★★★
+        {% elif review.stars == 4 %}
+        ★★★★☆
+        {% elif review.stars == 3 %}
+        ★★★☆☆
+        {% elif review.stars == 2 %}
+        ★★☆☆☆
+        {% elif review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+         &ndash; 
+        <a href="/bookclub/{{ review.club_id }}#{{ review.id }}">{{ review.club_title }}</a>, {{ review.club_author }}
+    </p>
+</div>
+{% endfor %}
+{% endif %}
 
 {% endblock %}

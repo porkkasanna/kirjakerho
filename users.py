@@ -14,6 +14,14 @@ def get_clubs(user_id):
              ORDER BY id DESC"""
     return db.query(sql, [user_id])
 
+def get_reviews(user_id):
+    sql = """SELECT r.id, r.stars, r.club_id, b.title club_title,
+                 b.author club_author, r.sent_at, r.modified_at
+             FROM reviews r, bookclubs b
+             WHERE r.user_id = ? AND r.club_id = b.id
+             ORDER BY r.id DESC"""
+    return db.query(sql, [user_id])
+
 def update_image(user_id, image):
     sql = "UPDATE users SET image = ? WHERE id = ?"
     db.execute(sql, [image, user_id])
