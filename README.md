@@ -11,6 +11,11 @@
 * käyttäjä pystyy etsimään ilmoituksia genren perusteella (ei vielä toiminnassa)
 * kullekin käyttäjälle on käyttäjäsivut, josta löytyy mm. käyttäjän omat kirjakerhot ja arvostelut
 
+## Tekijänoikeudet
+
+Sovelluksessa on valmiita profiilikuvia, jotka ovat tekijänoikeudettomia (public domain). Kuvat on haettu sivulta:
+https://pdimagearchive.org/
+
 ## Sovelluksen asennus
 
 Asenna `flask`-kirjasto:
