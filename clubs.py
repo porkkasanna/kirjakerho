@@ -70,7 +70,7 @@ def get_review(review_id):
 
 def add_review(stars, content, club_id, user_id, sent_at):
     sql = """INSERT INTO reviews (stars, content, club_id, user_id, sent_at, modified_at)
-             VALUES (?, ?, ?, ?, ?)"""
+             VALUES (?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [stars, content, club_id, user_id, sent_at, 0])
 
 def update_review(review_id, stars, content, modified_at):
