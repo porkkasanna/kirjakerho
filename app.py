@@ -96,6 +96,10 @@ def add_image():
         file = request.files["image"]
         user_id = session["user_id"]
 
+        if not file:
+            flash("Tiedosto puuttuu", "error")
+            return render_template("add_image.html")
+
         if not file.filename.endswith(".png"):
             flash("Väärä tiedostomuoto. Käytä PNG-muotoista kuvaa.", "error")
             return render_template("add_image.html")
@@ -151,6 +155,7 @@ def login():
             user_id = db.query(sql, [username])[0][0]
             session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
+            flash("Sisäänkirjautuminen onnistui", "message")
             return redirect("/")
         else:
             flash("Väärä käyttäjätunnus tai salasana", "error")

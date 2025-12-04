@@ -4,6 +4,12 @@
 
 {% block content %}
 
+{% for message in get_flashed_messages(category_filter=["message"]) %}
+<div class="message">
+    {{ message }}
+</div>
+{% endfor %}
+
 <h1> Kirjakerhot </h1>
 
 {% for club in bookclubs %}
