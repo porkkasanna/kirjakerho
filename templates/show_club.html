@@ -83,6 +83,7 @@
         <textarea type="text" name="content" rows="5" cols="40"></textarea>
     </p>
     <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä" />
 </form>
 {% endif %}

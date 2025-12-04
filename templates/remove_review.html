@@ -7,7 +7,7 @@
 <h1>Arvostelu</h1>
 <div class="box">
     <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
-        {% if review.modified_at != 0 %}
+        {% if review.modified_at != "0" %}
         </br><em>muokattu {{ review.modified_at }}</em>
         {% endif %}
     </p>
@@ -33,6 +33,7 @@
 <p>Haluatko varmasti poistaa arvostelun? Poistamista ei voi peruuttaa.</p>
 
 <form action="/remove_review/{{ review.id }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" name="remove" value="Poista arvostelu">
     <input type="submit" name="back" value="Peruuta">
 </form>

@@ -6,6 +6,8 @@ from time import strftime, localtime
 import markupsafe
 import sqlite3
 import config
+import secrets
+
 import db
 import clubs
 import users
@@ -15,6 +17,10 @@ app.secret_key = config.secret_key
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.template_filter()
@@ -85,6 +91,8 @@ def add_image():
         return render_template("add_image.html")
     
     if request.method == "POST":
+        require_login()
+        check_csrf()
         file = request.files["image"]
         user_id = session["user_id"]
 
@@ -100,6 +108,7 @@ def add_image():
 @app.route("/add_image_default", methods=["POST"])
 def add_image_default():
     require_login()
+    check_csrf()
 
     user_id = session["user_id"]
     filename = "static/" + request.form["image"]
@@ -141,6 +150,7 @@ def login():
             sql = "SELECT id FROM users WHERE username = ?"
             user_id = db.query(sql, [username])[0][0]
             session["user_id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             flash("Väärä käyttäjätunnus tai salasana", "error")
@@ -161,6 +171,8 @@ def create_club():
         return render_template("create_club.html", classes=all_classes)
 
     if request.method == "POST":
+        require_login()
+        check_csrf()
         user_id = session["user_id"]
         title = request.form["title"]
         author = request.form["author"]
@@ -207,6 +219,8 @@ def edit_club(club_id):
         return render_template("edit_club.html", bookclub=bookclub, all_classes=all_classes, classes=club_classes)
 
     if request.method == "POST":
+        require_login()
+        check_csrf()
         title = request.form["title"]
         author = request.form["author"]
         deadline = request.form["deadline"]
@@ -241,6 +255,8 @@ def remove_club(club_id):
         return render_template("remove_club.html", bookclub=bookclub)
 
     if request.method == "POST":
+        require_login()
+        check_csrf()
         if "remove" in request.form:
             clubs.remove_club(club_id)
             return redirect("/")
@@ -250,6 +266,7 @@ def remove_club(club_id):
 @app.route("/new_review", methods=["POST"])
 def new_review():
     require_login()
+
     stars = request.form["stars"]
     content = request.form["content"]
     club_id = request.form["club_id"]
@@ -273,6 +290,8 @@ def edit_review(review_id):
         return render_template("edit_review.html", review=review)
     
     if request.method == "POST":
+        require_login()
+        check_csrf()
         stars = request.form["stars"]
         content = request.form["content"]
         modified_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
@@ -297,6 +316,8 @@ def remove_review(review_id):
         return render_template("remove_review.html", review=review)
 
     if request.method == "POST":
+        require_login()
+        check_csrf()
         if "remove" in request.form:
             clubs.remove_review(review_id)
         return redirect("/bookclub/" + str(review["club_id"]))
