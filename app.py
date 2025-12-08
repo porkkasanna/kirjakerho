@@ -17,11 +17,17 @@ app.secret_key = config.secret_key
 
 def require_login():
     if "user_id" not in session:
-        abort(403)
+        forbidden()
 
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
-        abort(403)
+        forbidden()
+
+def forbidden():
+    abort(403)
+
+def not_found():
+    abort(404)
 
 @app.template_filter()
 def show_lines(content):
@@ -78,7 +84,7 @@ def create_user():
 def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
-        abort(404)
+        not_found()
     bookclubs = users.get_clubs(user_id)
     reviews = users.get_reviews(user_id)
     return render_template("user.html", user=user, bookclubs=bookclubs, reviews=reviews)
@@ -128,7 +134,7 @@ def add_image_default():
 def show_image(user_id):
     image = users.get_image(user_id)
     if not image:
-        abort(404)
+        not_found()
 
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/png")
@@ -145,7 +151,7 @@ def login():
         sql = "SELECT password_hash FROM users WHERE username = ?"
         try:
             password_hash = db.query(sql, [username])[0][0]
-        except:
+        except IndexError:
             flash("Väärä käyttäjätunnus tai salasana", "error")
             return redirect("/login")
 
@@ -184,7 +190,7 @@ def create_club():
         deadline = request.form["deadline"]
 
         if not title or not author or len(title) > 50 or len(author) > 50:
-            abort(403)
+            forbidden()
 
         classes = []
         for entry in request.form.getlist("classes"):
@@ -195,7 +201,7 @@ def create_club():
         try:
             club_id = clubs.add_club(user_id, title, author, deadline, classes)
         except sqlite3.IntegrityError:
-            abort(403)
+            forbidden()
 
         return redirect("/bookclub/" + str(club_id))
 
@@ -203,7 +209,7 @@ def create_club():
 def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     if not bookclub:
-        abort(404)
+        not_found()
     reviews = clubs.get_reviews(club_id)
     classes = clubs.get_classes(club_id)
     return render_template("show_club.html", bookclub=bookclub, reviews=reviews, classes=classes)
@@ -216,9 +222,9 @@ def edit_club(club_id):
     club_classes = clubs.get_classes(club_id)
 
     if not bookclub:
-        abort(404)
+        not_found()
     if bookclub["user_id"] != session["user_id"]:
-        abort(403)
+        forbidden()
 
     if request.method == "GET":
         return render_template("edit_club.html", bookclub=bookclub, all_classes=all_classes, classes=club_classes)
@@ -231,9 +237,9 @@ def edit_club(club_id):
         deadline = request.form["deadline"]
 
         if not title or not author:
-            abort(403)
+            forbidden()
         if len(title) > 50 or len(author) > 50:
-            abort(403)
+            forbidden()
         if not deadline:
             deadline = bookclub["deadline"]
         
@@ -252,9 +258,9 @@ def remove_club(club_id):
     bookclub = clubs.get_club(club_id)
 
     if not bookclub:
-        abort(404)
+        not_found()
     if bookclub["user_id"] != session["user_id"]:
-        abort(403)
+        forbidden()
 
     if request.method == "GET":
         return render_template("remove_club.html", bookclub=bookclub)
@@ -287,9 +293,9 @@ def edit_review(review_id):
     review = clubs.get_review(review_id)
 
     if not review:
-        abort(404)
+        not_found()
     if review["user_id"] != session["user_id"]:
-        abort(403)
+        forbidden()
     
     if request.method == "GET":
         return render_template("edit_review.html", review=review)
@@ -302,7 +308,7 @@ def edit_review(review_id):
         modified_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
 
         if not stars or not content:
-            abort(403)
+            forbidden()
         
         clubs.update_review(review_id, stars, content, modified_at)
         return redirect("/bookclub/" + str(review["club_id"]))
@@ -313,9 +319,9 @@ def remove_review(review_id):
     review = clubs.get_review(review_id)
 
     if not review:
-        abort(404)
+        not_found()
     if review["user_id"] != session["user_id"]:
-        abort(403)
+        forbidden()
 
     if request.method == "GET":
         return render_template("remove_review.html", review=review)
