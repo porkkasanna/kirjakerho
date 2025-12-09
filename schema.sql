@@ -7,11 +7,12 @@ CREATE TABLE users (
 
 CREATE TABLE bookclubs (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER REFERENCES users,
-    title TEXT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
     author TEXT,
     deadline TEXT,
-    closed INTEGER
+    closed INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE classes (
@@ -22,17 +23,20 @@ CREATE TABLE classes (
 
 CREATE TABLE club_classes (
     id INTEGER PRIMARY KEY,
-    club_id INTEGER REFERENCES bookclubs,
+    club_id INTEGER,
     title TEXT,
-    value TEXT
+    value TEXT,
+    FOREIGN KEY (club_id) REFERENCES bookclubs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE reviews (
     id INTEGER PRIMARY KEY,
-    club_id INTEGER REFERENCES bookclubs,
-    user_id INTEGER REFERENCES users,
-    stars INTEGER,
+    club_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    stars INTEGER NOT NULL CHECK (stars BETWEEN 1 AND 5),
     content TEXT,
-    sent_at TEXT,
-    modified_at TEXT
+    sent_at TEXT NOT NULL,
+    modified_at TEXT,
+    FOREIGN KEY (club_id) REFERENCES bookclubs(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
