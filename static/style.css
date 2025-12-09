@@ -49,6 +49,10 @@ input[type=submit] {
     cursor: pointer;
 }
 
+#submit_search {
+    margin-left: 5px;
+}
+
 input[type=text], input[type=password], textarea {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 13px;
@@ -58,7 +62,25 @@ input[type=text], input[type=password], textarea {
     padding: 8px;
     min-width: 30%;
     border-style: solid;
-    border-radius: 2px;
+    border-radius: 8px;
+    border-color: #666;
+    border-width: 1px;
+}
+
+#text_search {
+    border-radius: 8px 0px 0px 8px;
+}
+
+select {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 13px;
+    color: #333;
+    background-color: #e2e2e2;
+    margin: 8px -6px;
+    padding: 8px;
+    width: 125px;
+    border-style: solid;
+    border-radius: 0px 8px 8px 0px;
     border-color: #666;
     border-width: 1px;
 }

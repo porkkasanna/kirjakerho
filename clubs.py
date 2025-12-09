@@ -44,15 +44,30 @@ def remove_club(club_id):
     sql = "DELETE FROM bookclubs WHERE id = ?"
     db.execute(sql, [club_id])
 
-def search(query):
+def search(query, query_from):
     sql = """SELECT b.id, b.title, b.author, u.username
-             FROM bookclubs b, users u
-             WHERE 
-                b.user_id = u.id AND b.title LIKE ? OR
-                b.user_id = u.id AND b.author LIKE ?
-             ORDER BY b.id DESC"""
+             FROM bookclubs b, users u """
+    
+    if query_from == "title":
+        sql = sql + """WHERE b.user_id = u.id AND b.title LIKE ?
+                       ORDER BY b.id DESC"""
+    elif query_from == "author":
+        sql = sql + """WHERE b.user_id = u.id AND b.author LIKE ?
+                       ORDER BY b.id DESC"""
+    elif query_from == "user":
+        sql = sql + """WHERE b.user_id = u.id AND u.username LIKE ?
+                       ORDER BY b.id DESC"""
+    elif query_from == "genre":
+        sql = """SELECT b.id, b.title, b.author, u.username
+                 FROM bookclubs b, users u, club_classes c
+                 WHERE 
+                    b.user_id = u.id AND
+                    c.club_id = b.id AND
+                    value LIKE ?
+                 ORDER BY b.id DESC"""
+
     like = "%" + query + "%"
-    return db.query(sql, [like, like])
+    return db.query(sql, [like])
 
 def get_reviews(club_id):
     sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.user_id, u.username

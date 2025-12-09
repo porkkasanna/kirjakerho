@@ -1,19 +1,41 @@
 {% extends "layout.html" %}
 
-{% block title %}Haku{% endblock %}
+{% block title %}Hae kirjakerhoista{% endblock %}
 
 {% block content %}
 
-<h1>Haku</h1>
+<h1>Hae kirjakerhoista</h1>
 
 <form action="/search" method="get">
     <p>
         {% if query %}
-        <input type="text" name="query" value="{{ query }}" />
+        <input id="text_search" type="text" name="query" value="{{ query }}" />
         {% else %}
-        <input type="text" name="query" />
+        <input id="text_search" type="text" name="query" />
         {% endif %}
-        <input type="submit" value="Hae" />
+        <select name="query_from" id="query_from">
+            {% if q_from == "title" %}
+            <option value="title" selected>kirjan nimi</option>
+            {% else %}
+            <option value="title">kirjan nimi</option>
+            {% endif %}
+            {% if q_from == "author" %}
+            <option value="author" selected>kirjailija</option>
+            {% else %}
+            <option value="author">kirjailija</option>
+            {% endif %}
+            {% if q_from == "user" %}
+            <option value="user" selected>käyttäjä</option>
+            {% else %}
+            <option value="user">käyttäjä</option>
+            {% endif %}
+            {% if q_from == "genre" %}
+            <option value="genre" selected>genre</option>
+            {% else %}
+            <option value="genre">genre</option>
+            {% endif %}
+        </select>
+        <input id="submit_search" type="submit" value="Hae" />
     </p>
 </form>
 

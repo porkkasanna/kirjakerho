@@ -43,8 +43,11 @@ def index():
 @app.route("/search")
 def search():
     query = request.args.get("query")
-    results = clubs.search(query) if query else []
-    return render_template("search.html", query=query, results=results)
+    query_from = request.args.get("query_from")
+    if not query_from:
+        query_from = ""
+    results = clubs.search(query, query_from) if query else []
+    return render_template("search.html", query=query, q_from=query_from, results=results)
 
 @app.route("/register")
 def register():
