@@ -7,7 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE bookclubs (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    user_id INTEGER,
     title TEXT NOT NULL,
     author TEXT,
     deadline TEXT,
@@ -31,12 +31,12 @@ CREATE TABLE club_classes (
 
 CREATE TABLE reviews (
     id INTEGER PRIMARY KEY,
-    club_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
+    club_id INTEGER,
+    user_id INTEGER,
     stars INTEGER NOT NULL CHECK (stars BETWEEN 1 AND 5),
     content TEXT,
     sent_at TEXT NOT NULL,
     modified_at TEXT,
     FOREIGN KEY (club_id) REFERENCES bookclubs(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

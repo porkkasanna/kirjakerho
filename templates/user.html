@@ -30,11 +30,14 @@
 {% endif %}
 
 {% if user.id == session.user_id %}
+<p>
     {% if user.has_image %}
-    <p><a href="/add_image">Muokkaa profiilikuvaa</a></p>
+    <a href="/add_image">Muokkaa profiilikuvaa</a> |
     {% else %}
-    <p><a href="/add_image">Lisää profiilikuva</a></p>
+    <a href="/add_image">Lisää profiilikuva</a> |
     {% endif %}
+    <a href="/remove_user/{{ user.id }}">Poista käyttäjätunnus</a>
+</p> 
 {% else %}
 <br />
 {% endif %}

@@ -74,14 +74,36 @@ def create_user():
     password_hash = generate_password_hash(password1)
 
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.add_user(username, password_hash)
     except sqlite3.IntegrityError:
         flash("Käyttäjätunnus on varattu", "error")
         return redirect("/register")
     
     flash("Käyttäjätunnus luotiin onnistuneesti")
     return redirect("/login")
+
+@app.route("/remove_user/<int:user_id>", methods=["GET", "POST"])
+def remove_user(user_id):
+    require_login()
+
+    user = users.get_user(user_id)
+
+    if not user:
+        not_found()
+    if user["id"] != session["user_id"]:
+        forbidden()
+
+    if request.method == "GET":
+        return render_template("remove_user.html", user=user)
+
+    if request.method == "POST":
+        require_login()
+        check_csrf()
+        if "remove" in request.form:
+            users.remove_user(user_id)
+            return redirect("/logout")
+        else:
+            return redirect("/user/" + str(user_id))
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):

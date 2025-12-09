@@ -30,3 +30,11 @@ def get_image(user_id):
     sql = "SELECT image FROM users WHERE id = ?"
     result = db.query(sql, [user_id])
     return result[0][0] if result else None
+
+def add_user(username, password_hash):
+    sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+    db.execute(sql, [username, password_hash])
+
+def remove_user(user_id):
+    sql = "DELETE FROM users WHERE id = ?"
+    db.execute(sql, [user_id])

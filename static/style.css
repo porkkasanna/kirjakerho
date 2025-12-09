@@ -49,6 +49,13 @@ input[type=submit] {
     cursor: pointer;
 }
 
+#remove {
+    background-color: rgb(221, 153, 153);
+    border-color: rgb(192, 57, 57);
+    border-width: 2px;
+    color: #222;
+}
+
 #submit_search {
     margin-left: 5px;
 }

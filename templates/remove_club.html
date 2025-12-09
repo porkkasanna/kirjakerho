@@ -7,9 +7,9 @@
 <h1>{{bookclub.title}}</h1>
 <p>Haluatko varmasti poistaa kirjakerhon? Poistamista ei voi peruuttaa.</p>
 
-<form action="/remove_club/{{bookclub.id}}" method="post">
+<form action="/remove_club/{{ bookclub.id }}" method="post">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" name="remove" value="Poista kirjakerho">
+    <input id="remove" type="submit" name="remove" value="Poista kirjakerho">
     <input type="submit" name="back" value="Peruuta">
 </form>
 {% endblock %}
