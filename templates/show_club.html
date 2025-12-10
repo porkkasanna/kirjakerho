@@ -76,15 +76,26 @@
 <form action="/new_review" method="post">
     <p>
         Tähdet: <br />
-        <input type="radio" name="stars" value="5"> ★★★★★ <br />
-        <input type="radio" name="stars" value="4"> ★★★★☆ <br />
-        <input type="radio" name="stars" value="3"> ★★★☆☆ <br />
-        <input type="radio" name="stars" value="2"> ★★☆☆☆ <br />
-        <input type="radio" name="stars" value="1"> ★☆☆☆☆ <br />
+        <input id="five_stars" type="radio" name="stars" value="5">
+        <label for="five_stars">★★★★★</label> <br />
+        <input id="four_stars"type="radio" name="stars" value="4">
+        <label for="four_stars">★★★★☆</label> <br />
+        <input id="three_stars"type="radio" name="stars" value="3">
+        <label for="three_stars">★★★☆☆</label> <br />
+        <input id="two_stars"type="radio" name="stars" value="2">
+        <label for="two_stars">★★☆☆☆</label> <br />
+        <input id="one_star"type="radio" name="stars" value="1">
+        <label for="one_star">★☆☆☆☆</label> <br />
     </p>
     <p>
-        Arvostelu: <br />
-        <textarea type="text" name="content" rows="5" cols="40"></textarea>
+        <label for="review_content">Arvostelu:</label> <br />
+        <textarea 
+            id="review_content"
+            type="text"
+            name="content"
+            rows="5"
+            cols="40">
+        </textarea>
     </p>
     <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

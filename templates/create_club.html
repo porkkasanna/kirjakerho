@@ -9,19 +9,23 @@
 {% if session.username %}
 <form action="/create_club" method="post">
     <p>
-        Kirjan nimi: <br />
-        <input type="text" name="title" maxlength="50" required />
+        <label for="title">Kirjan nimi:</label> <br />
+        <input id="title" type="text" name="title" maxlength="50" required />
     </p>
     <p>
-        Kirjoittaja: <br />
-        <input type="text" name="author" maxlength="50" required />
+        <label for="author">Kirjoittaja:</label> <br />
+        <input id="author" type="text" name="author" maxlength="50" required />
     </p>
     <p>
         Genre:
         {% for class in classes %}
             {% for option in classes[class] %}
                 <div class="check">
-                    <input type="checkbox" name="classes" value="{{ class }}:{{ option }}">
+                    <input 
+                        id="{{ class }}:{{ option }}"
+                        type="checkbox"
+                        name="classes"
+                        value="{{ class }}:{{ option }}">
                     <label for="{{ class }}:{{ option }}">{{ option }}</label>
                 </div>
                 {% endfor %}
@@ -29,8 +33,8 @@
     </p>
     <br/><br/><br/><br/><br/><br/>
     <p>
-        Viimeinen osallistumispäivä: <br />
-        <input type="date" name="deadline" />
+        <label for="deadline">Viimeinen osallistumispäivä:</label> <br />
+        <input id="deadline" type="date" name="deadline" />
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Luo kirjakerho" />

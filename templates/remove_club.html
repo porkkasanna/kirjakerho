@@ -5,7 +5,9 @@
 {% block content %}
 
 <h1>{{bookclub.title}}</h1>
-<p>Haluatko varmasti poistaa kirjakerhon? Poistamista ei voi peruuttaa.</p>
+<p>
+    <label for="remove">Haluatko varmasti poistaa kirjakerhon? Poistamista ei voi peruuttaa.</label>
+</p>
 
 <form action="/remove_club/{{ bookclub.id }}" method="post">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

@@ -10,38 +10,55 @@
     <p>
         Tähdet: <br />
         {% if review.stars == 5 %}
-        <input type="radio" name="stars" value="5" checked="checked"> ★★★★★ <br />
+        <input type="radio" name="stars" value="5" checked="checked">
+        <label for="five_stars">★★★★★</label> <br />
         {% else %}
-        <input type="radio" name="stars" value="5"> ★★★★★ <br />
+        <input id="five_stars" type="radio" name="stars" value="5">
+        <label for="five_stars">★★★★★</label> <br />
         {% endif %}
 
         {% if review.stars == 4 %}
-        <input type="radio" name="stars" value="4" checked="checked"> ★★★★☆ <br />
+        <input id="four_stars" type="radio" name="stars" value="4" checked="checked">
+        <label for="four_stars">★★★★☆</label> <br />
         {% else %}
-        <input type="radio" name="stars" value="4"> ★★★★☆ <br />
+        <input id="four_stars" type="radio" name="stars" value="4">
+        <label for="four_stars">★★★★☆</label> <br />
         {% endif %}
 
         {% if review.stars == 3 %}
-        <input type="radio" name="stars" value="3" checked="checked"> ★★★☆☆ <br />
+        <input id="three_stars" type="radio" name="stars" value="3" checked="checked">
+        <label for="three_stars">★★★☆☆</label> <br />
         {% else %}
-        <input type="radio" name="stars" value="3"> ★★★☆☆ <br />
+        <input id="three_stars" type="radio" name="stars" value="3">
+        <label for="three_stars">★★★☆☆</label> <br />
         {% endif %}
 
         {% if review.stars == 2 %}
-        <input type="radio" name="stars" value="2" checked="checked"> ★★☆☆☆ <br />
+        <input id="two_stars" type="radio" name="stars" value="2" checked="checked">
+        <label for="two_stars">★★☆☆☆</label> <br />
         {% else %}
-        <input type="radio" name="stars" value="2"> ★★☆☆☆ <br />
+        <input id="two_stars" type="radio" name="stars" value="2">
+        <label for="two_stars">★★☆☆☆</label> <br />
         {% endif %}
 
         {% if review.stars == 1 %}
-        <input type="radio" name="stars" value="1" checked="checked"> ★☆☆☆☆ <br />
+        <input id="one_star" type="radio" name="stars" value="1" checked="checked">
+        <label for="one_star">★☆☆☆☆</label> <br />
         {% else %}
-        <input type="radio" name="stars" value="1"> ★☆☆☆☆ <br />
+        <input id="one_star" type="radio" name="stars" value="1">
+        <label for="one_star">★☆☆☆☆</label> <br />
         {% endif %}
     </p>
     <p>
-        Arvostelu: <br />
-        <textarea type="text" name="content" rows="5" cols="40">{{ review.content }}</textarea>
+        <label for="review_content">Arvostelu:</label> <br />
+        <textarea 
+            id="review_content"
+            type="text"
+            name="content"
+            rows="5"
+            cols="40">
+            {{ review.content }}
+        </textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä" />
