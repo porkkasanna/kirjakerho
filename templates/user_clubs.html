@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %} Käyttäjän {{ user.username }} kirjakerhot {% endblock %}
+
+{% block content %}
+
+<h1> Käyttäjän {{ user.username }} kirjakerhot </h1>
+
+{% for club in bookclubs %}
+<div class="box">
+    <p>
+        <a href="/bookclub/{{ club.id }}">{{ club.title }}</a>, {{ club.author }}
+    </p>
+</div>
+{% endfor %}
+
+{% if page_count > 1 %}
+<p>
+    {% if page > 1 %}
+    <a href="/user/bookclubs/{{ user.id }}/page/1">&lt;&lt;</a>
+    <a href="/user/bookclubs/{{ user.id }}/page/{{ page - 1 }}">&lt;</a>
+    {% endif %}
+    Sivu {{ page }} / {{ page_count }}
+    {% if page < page_count %}
+    <a href="/user/bookclubs/{{ user.id }}/page/{{ page + 1 }}">&gt;</a>
+    <a href="/user/bookclubs/{{ user.id }}/page/{{ page_count }}">&gt;&gt;</a>
+    {% endif %}
+</p>
+{% endif %}
+
+{% endblock %}

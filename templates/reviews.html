@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %} Kirjan {{ bookclub.title }} arvostelut {% endblock %}
+
+{% block content %}
+
+<h1> Kirjan {{ bookclub.title }} arvostelut </h1>
+
+{% if reviews %}
+{% for review in reviews %}
+<div class="box" id="{{ review.id }}">
+    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
+        {% if review.modified_at != "0" %}
+        </br><em>muokattu {{ review.modified_at }}</em>
+        {% endif %}
+    </p>
+    <p style="font-size: 20px;">
+        {% if review.stars == 5 %}
+        ★★★★★
+        {% elif review.stars == 4 %}
+        ★★★★☆
+        {% elif review.stars == 3 %}
+        ★★★☆☆
+        {% elif review.stars == 2 %}
+        ★★☆☆☆
+        {% elif review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+    </p>
+    <p>{{ review.content| show_lines }} </p>
+    <p>
+        &ndash; <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
+    </p>
+    {% if review.user_id == session.user_id %}
+    <p style="font-size: 13px;">
+        <a href="/edit_review/{{ review.id }}">Muokkaa</a> |
+        <a href="/remove_review/{{ review.id }}">Poista</a>
+    </p>
+    {% endif %}
+</div>
+{% endfor %}
+{% else %}
+<p>Kirjalla {{ bookclub.title }} ei vielä ole arvosteluja.</p>
+{% endif %}
+
+{% if page_count > 1 %}
+<p>
+    {% if page > 1 %}
+    <a href="/bookclub/reviews/{{ bookclub.id }}/page/1">&lt;&lt;</a>
+    <a href="/bookclub/reviews/{{ bookclub.id }}/page/{{ page - 1 }}">&lt;</a>
+    {% endif %}
+    Sivu {{ page }} / {{ page_count }}
+    {% if page < page_count %}
+    <a href="/bookclub/reviews/{{ bookclub.id }}/page/{{ page + 1 }}">&gt;</a>
+    <a href="/bookclub/reviews/{{ bookclub.id }}/page/{{ page_count }}">&gt;&gt;</a>
+    {% endif %}
+</p>
+{% endif %}
+
+{% endblock %}

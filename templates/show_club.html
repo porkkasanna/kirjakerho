@@ -60,8 +60,12 @@
     </p>
     {% endif %}
 </div>
-
 {% endfor %}
+<p>
+    {% if review_count > 5 %}
+    <a href="/bookclub/reviews/{{ bookclub.id }}/page/1">Näytä kaikki arvostelut</a>
+    {% endif %}
+</p>
 {% else %}
 <p>Kirjakerholla ei vielä ole arvosteluja.</p>
 {% endif %}

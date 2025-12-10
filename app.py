@@ -7,6 +7,7 @@ import markupsafe
 import sqlite3
 import config
 import secrets
+import math
 
 import db
 import clubs
@@ -36,9 +37,21 @@ def show_lines(content):
     return markupsafe.Markup(content)
 
 @app.route("/")
-def index():
-    bookclubs = clubs.get_clubs()
-    return render_template("index.html", bookclubs=bookclubs)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 15
+    club_count = clubs.club_count()
+    page_count = math.ceil(club_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    bookclubs = clubs.get_clubs(page, page_size)
+    
+    return render_template("index.html", bookclubs=bookclubs, page=page, page_count=page_count)
 
 @app.route("/search")
 def search():
@@ -111,8 +124,10 @@ def show_user(user_id):
     if not user:
         not_found()
     bookclubs = users.get_clubs(user_id)
+    club_count = users.club_count(user_id)
     reviews = users.get_reviews(user_id)
-    return render_template("user.html", user=user, bookclubs=bookclubs, reviews=reviews)
+    review_count = users.review_count(user_id)
+    return render_template("user.html", user=user, bookclubs=bookclubs, club_count=club_count, reviews=reviews, review_count=review_count)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
@@ -235,9 +250,27 @@ def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     if not bookclub:
         not_found()
+    review_count = clubs.review_count(club_id)
     reviews = clubs.get_reviews(club_id)
     classes = clubs.get_classes(club_id)
-    return render_template("show_club.html", bookclub=bookclub, reviews=reviews, classes=classes)
+    return render_template("show_club.html", bookclub=bookclub, reviews=reviews, review_count=review_count, classes=classes)
+
+@app.route("/user/bookclubs/<int:user_id>")
+@app.route("/user/bookclubs/<int:user_id>/page/<int:page>")
+def show_user_clubs(user_id, page=1):
+    page_size = 10
+    club_count = users.club_count(user_id)
+    page_count = math.ceil(club_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/user/bookclubs/" + str(user_id) + "/page/1")
+    if page > page_count:
+        return redirect("/user/bookclubs/" + str(user_id) + "/page/" + str(page_count))
+    
+    user = users.get_user(user_id)
+    bookclubs = users.get_clubs(user_id, page, page_size)
+    return render_template("user_clubs.html", bookclubs=bookclubs, user=user, page=page, page_count=page_count)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
@@ -311,6 +344,40 @@ def new_review():
 
     clubs.add_review(stars, content, club_id, user_id, sent_at)
     return redirect("/bookclub/" + str(club_id))
+
+@app.route("/bookclub/reviews/<int:club_id>")
+@app.route("/bookclub/reviews/<int:club_id>/page/<int:page>")
+def show_reviews(club_id, page=1):
+    page_size = 10
+    review_count = clubs.review_count(club_id)
+    page_count = math.ceil(review_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/bookclub/reviews/" + str(club_id) + "/page/1")
+    if page > page_count:
+        return redirect("/bookclub/reviews/" + str(club_id) + "/page/" + str(page_count))
+    
+    bookclub = clubs.get_club(club_id)
+    reviews = clubs.get_reviews(club_id, page, page_size)
+    return render_template("reviews.html", reviews=reviews, bookclub=bookclub, page=page, page_count=page_count)
+
+@app.route("/user/reviews/<int:user_id>")
+@app.route("/user/reviews/<int:user_id>/page/<int:page>")
+def show_user_reviews(user_id, page=1):
+    page_size = 10
+    review_count = users.review_count(user_id)
+    page_count = math.ceil(review_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/user/reviews/" + str(user_id) + "/page/1")
+    if page > page_count:
+        return redirect("/user/reviews/" + str(user_id) + "/page/" + str(page_count))
+    
+    user = users.get_user(user_id)
+    reviews = users.get_reviews(user_id, page, page_size)
+    return render_template("user_reviews.html", reviews=reviews, user=user, page=page, page_count=page_count)
 
 @app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
 def edit_review(review_id):

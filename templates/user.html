@@ -17,16 +17,16 @@
 
 <h1> {{ user.username }} </h1>
 
-{% if bookclubs | count == 1 %}
-<p> Käyttäjällä on {{ bookclubs | count }} oma kirjakerho. </p>
+{% if club_count == 1 %}
+<p> Käyttäjällä on {{ club_count }} oma kirjakerho. </p>
 {% else %}
-<p> Käyttäjällä on {{ bookclubs | count }} omaa kirjakerhoa. </p>
+<p> Käyttäjällä on {{ club_count }} omaa kirjakerhoa. </p>
 {% endif %}
 
-{% if reviews | count == 1 %}
-<p> Käyttäjä on kirjoittanut {{ reviews | count }} arvostelun.</p>
+{% if review_count == 1 %}
+<p> Käyttäjä on kirjoittanut {{ review_count }} arvostelun.</p>
 {% else %}
-<p> Käyttäjä on kirjoittanut {{ reviews | count }} arvostelua. </p>
+<p> Käyttäjä on kirjoittanut {{ review_count }} arvostelua. </p>
 {% endif %}
 
 {% if user.id == session.user_id %}
@@ -56,6 +56,11 @@
     </p>
 </div>
 {% endfor %}
+<p>
+    {% if club_count > 5 %}
+    <a href="/user/bookclubs/{{ user.id }}/page/1">Näytä kaikki kirjakerhot</a>
+    {% endif %}
+</p>
 {% endif %}
 
 <h2>Arvostelut</h2>
@@ -79,10 +84,15 @@
         ★☆☆☆☆
         {% endif %}
          &ndash; 
-        <a href="/bookclub/{{ review.club_id }}#{{ review.id }}">{{ review.club_title }}</a>, {{ review.club_author }}
+        <a href="/bookclub/{{ review.club_id }}">{{ review.club_title }}</a>, {{ review.club_author }}
     </p>
 </div>
 {% endfor %}
+<p>
+    {% if review_count > 5 %}
+    <a href="/user/reviews/{{ user.id }}/page/1">Näytä kaikki arvostelut</a>
+    {% endif %}
+</p>
 {% endif %}
 
 {% endblock %}

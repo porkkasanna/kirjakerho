@@ -8,19 +8,36 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
-def get_clubs(user_id):
-    sql = """SELECT id, title, author 
-             FROM bookclubs WHERE user_id = ?
-             ORDER BY id DESC"""
-    return db.query(sql, [user_id])
+def get_clubs(user_id, page=1, page_size=5):
+    sql = """SELECT b.id, b.title, b.author, b.user_id, u.username
+             FROM bookclubs b, users u
+             WHERE b.user_id = u.id AND u.id = ?
+             ORDER BY b.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [user_id, limit, offset])
 
-def get_reviews(user_id):
-    sql = """SELECT r.id, r.stars, r.club_id, b.title club_title,
-                 b.author club_author, r.sent_at, r.modified_at
-             FROM reviews r, bookclubs b
-             WHERE r.user_id = ? AND r.club_id = b.id
-             ORDER BY r.id DESC"""
-    return db.query(sql, [user_id])
+def club_count(user_id):
+    sql = "SELECT COUNT(id) FROM bookclubs WHERE user_id = ?"
+    result = db.query(sql, [user_id])
+    return result[0][0] if result else None
+
+def get_reviews(user_id, page=1, page_size=5):
+    sql = """SELECT r.id, r.stars, r.content, r.club_id, b.title club_title,
+                 b.author club_author, r.sent_at, r.modified_at, r.user_id, u.username
+             FROM reviews r, bookclubs b, users u
+             WHERE u.id = ? AND r.user_id = u.id AND r.club_id = b.id
+             ORDER BY r.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [user_id, limit, offset])
+
+def review_count(user_id):
+    sql = "SELECT COUNT(id) FROM reviews WHERE user_id = ?"
+    result = db.query(sql, [user_id])
+    return result[0][0] if result else None
 
 def update_image(user_id, image):
     sql = "UPDATE users SET image = ? WHERE id = ?"

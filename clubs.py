@@ -1,11 +1,14 @@
 import db
 
-def get_clubs():
+def get_clubs(page, page_size):
     sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username
              FROM bookclubs b JOIN users u ON b.user_id = u.id
              GROUP BY b.id
-             ORDER BY b.id DESC"""
-    return db.query(sql)
+             ORDER BY b.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 def get_club(club_id):
     sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username
@@ -13,6 +16,11 @@ def get_club(club_id):
              WHERE b.user_id = u.id AND b.id = ?"""
     result = db.query(sql, [club_id])
     return result[0] if result else None
+
+def club_count():
+    sql = "SELECT COUNT(id) FROM bookclubs"
+    result = db.query(sql)
+    return result[0][0] if result else None
 
 def add_club(user_id, title, author, deadline, classes):
     sql = """INSERT INTO bookclubs (user_id, title, author, deadline, closed)
@@ -69,12 +77,15 @@ def search(query, query_from):
     like = "%" + query + "%"
     return db.query(sql, [like])
 
-def get_reviews(club_id):
+def get_reviews(club_id, page=1, page_size=5):
     sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.user_id, u.username
              FROM reviews r, users u
              WHERE r.user_id = u.id AND r.club_id = ?
-             ORDER BY r.id DESC"""
-    return db.query(sql, [club_id])
+             ORDER BY r.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [club_id, limit, offset])
 
 def get_review(review_id):
     sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.club_id, r.user_id, u.username
@@ -82,6 +93,11 @@ def get_review(review_id):
              WHERE r.id = ? AND u.id = r.user_id"""
     result = db.query(sql, [review_id])
     return result[0] if result else None
+
+def review_count(club_id):
+    sql = "SELECT COUNT(id) FROM reviews WHERE club_id = ?"
+    result = db.query(sql, [club_id])
+    return result[0][0] if result else None
 
 def add_review(stars, content, club_id, user_id, sent_at):
     sql = """INSERT INTO reviews (stars, content, club_id, user_id, sent_at, modified_at)

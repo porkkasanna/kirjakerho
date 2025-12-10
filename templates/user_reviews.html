@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %} Käyttäjän {{ user.username }} lähettämät arvostelut {% endblock %}
+
+{% block content %}
+
+<h1> Käyttäjän {{ user.username }} lähettämät arvostelut </h1>
+
+{% if reviews %}
+{% for review in reviews %}
+<div class="box">
+    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}</p>
+    <p>
+        {% if review.stars == 5 %}
+        ★★★★★
+        {% elif review.stars == 4 %}
+        ★★★★☆
+        {% elif review.stars == 3 %}
+        ★★★☆☆
+        {% elif review.stars == 2 %}
+        ★★☆☆☆
+        {% elif review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+         &ndash; 
+        <a href="/bookclub/{{ review.club_id }}">{{ review.club_title }}</a>, {{ review.club_author }}
+    </p>
+</div>
+{% endfor %}
+{% else %}
+<p>Käyttäjä {{ user.username }} ei vielä ole lähettänyt arvosteluja.</p>
+{% endif %}
+
+{% if page_count > 1 %}
+<p>
+    {% if page > 1 %}
+    <a href="/user/reviews/{{ user.id }}/page/1">&lt;&lt;</a>
+    <a href="/user/reviews/{{ user.id }}/page/{{ page - 1 }}">&lt;</a>
+    {% endif %}
+    Sivu {{ page }} / {{ page_count }}
+    {% if page < page_count %}
+    <a href="/user/reviews/{{ user.id }}/page/{{ page + 1 }}">&gt;</a>
+    <a href="/user/reviews/{{ user.id }}/page/{{ page_count }}">&gt;&gt;</a>
+    {% endif %}
+</p>
+{% endif %}
+
+{% endblock %}
