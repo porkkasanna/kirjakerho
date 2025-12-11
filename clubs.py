@@ -52,30 +52,58 @@ def remove_club(club_id):
     sql = "DELETE FROM bookclubs WHERE id = ?"
     db.execute(sql, [club_id])
 
-def search(query, query_from):
+def query_count(query, query_from):
+    sql = """SELECT COUNT(id) FROM bookclubs """
+
+    if query_from == "title":
+        sql = sql + """WHERE title LIKE ?"""
+    elif query_from == "author":
+        sql = sql + """WHERE author LIKE ?"""
+    elif query_from == "user":
+        sql = """SELECT COUNT(b.id)
+                 FROM bookclubs b, users u
+                 WHERE b.user_id = u.id AND u.username LIKE ?"""
+    elif query_from == "genre":
+        sql = """SELECT COUNT(b.id) 
+                 FROM bookclubs b, club_classes c
+                 WHERE c.club_id = b.id AND c.value LIKE ?"""
+    else:
+        return 0
+    
+    like = "%" + query + "%"
+    result = db.query(sql, [like])
+    return result[0][0] if query else None
+
+def search(query, query_from, page, page_size):
     sql = """SELECT b.id, b.title, b.author, u.username
              FROM bookclubs b, users u """
     
     if query_from == "title":
         sql = sql + """WHERE b.user_id = u.id AND b.title LIKE ?
-                       ORDER BY b.id DESC"""
+                       ORDER BY b.id DESC
+                       LIMIT ? OFFSET ?"""
     elif query_from == "author":
         sql = sql + """WHERE b.user_id = u.id AND b.author LIKE ?
-                       ORDER BY b.id DESC"""
+                       ORDER BY b.id DESC
+                       LIMIT ? OFFSET ?"""
     elif query_from == "user":
         sql = sql + """WHERE b.user_id = u.id AND u.username LIKE ?
-                       ORDER BY b.id DESC"""
+                       ORDER BY b.id DESC
+                       LIMIT ? OFFSET ?"""
     elif query_from == "genre":
         sql = """SELECT b.id, b.title, b.author, u.username
                  FROM bookclubs b, users u, club_classes c
                  WHERE 
                     b.user_id = u.id AND
                     c.club_id = b.id AND
-                    value LIKE ?
-                 ORDER BY b.id DESC"""
-
+                    c.value LIKE ?
+                 ORDER BY b.id DESC
+                 LIMIT ? OFFSET ?"""
+    
+    limit = page_size
+    offset = page_size * (page - 1)
     like = "%" + query + "%"
-    return db.query(sql, [like])
+    return db.query(sql, [like, limit, offset])
 
 def get_reviews(club_id, page=1, page_size=5):
     sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.user_id, u.username

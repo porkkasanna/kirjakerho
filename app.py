@@ -39,7 +39,7 @@ def show_lines(content):
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
-    page_size = 15
+    page_size = 10
     club_count = clubs.club_count()
     page_count = math.ceil(club_count / page_size)
     page_count = max(page_count, 1)
@@ -57,10 +57,22 @@ def index(page=1):
 def search():
     query = request.args.get("query")
     query_from = request.args.get("query_from")
-    if not query_from:
-        query_from = ""
-    results = clubs.search(query, query_from) if query else []
-    return render_template("search.html", query=query, q_from=query_from, results=results)
+    page = request.args.get("page")
+
+    if not page:
+        page = 1
+    
+    page = int(page)
+    page_size = 10
+    query_count = clubs.query_count(query, query_from)
+    page_count = math.ceil(query_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1 or page > page_count:
+        return redirect("/search")
+
+    results = clubs.search(query, query_from, page, page_size) if query else []
+    return render_template("search.html", query=query, q_from=query_from, query_count=query_count, results=results, page=page, page_count=page_count)
 
 @app.route("/register")
 def register():

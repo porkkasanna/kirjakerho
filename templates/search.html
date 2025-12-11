@@ -40,16 +40,36 @@
 </form>
 
 {% if query %}
-<h1>Hakutulokset</h1>
+<h2>Hakutulokset</h2>
 
 {% if results %}
-{% for result in results %}
 <p>
-    <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
-    <br />
-    {{ result.username }}
+    Hakusanalla <i>{{ query }}</i> löytyi {{ query_count }} tulosta.
 </p>
+{% for result in results %}
+<div class="box">
+    <p>
+        <a href="/bookclub/{{ result.id }}">{{ result.title }}</a>, {{ result.author }}
+        <br />
+        Lähettänyt {{ result.username }}
+    </p>
+</div>
 {% endfor %}
+
+{% if page_count > 1 %}
+<p>
+    {% if page > 1 %}
+    <a href="/search?query={{ query }}&query_from={{ q_from }}&page=1">&lt;&lt;</a>
+    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page - 1 }}">&lt;</a>
+    {% endif %}
+    Sivu {{ page }} / {{ page_count }}
+    {% if page < page_count %}
+    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page + 1 }}">&gt;</a>
+    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page_count }}">&gt;&gt;</a>
+    {% endif %}
+</p>
+{% endif %}
+
 {% else %}
 <p>
     Hakusanalla <i>{{ query }}</i> ei löytynyt kirjakerhoja.
