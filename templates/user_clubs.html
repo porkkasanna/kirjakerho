@@ -15,15 +15,19 @@
 {% endfor %}
 
 {% if page_count > 1 %}
-<p>
+<p style="font-size: 13px;">
     {% if page > 1 %}
-    <a href="/user/bookclubs/{{ user.id }}/page/1">&lt;&lt;</a>
-    <a href="/user/bookclubs/{{ user.id }}/page/{{ page - 1 }}">&lt;</a>
+    <span class="page_navi">
+        <a id="next_prev" href="/user/bookclubs/{{ user.id }}/page/1">&lt;&lt;</a></span>
+    <span class="page_navi">
+        <a id="next_prev" href="/user/bookclubs/{{ user.id }}/page/{{ page - 1 }}">&lt;</a></span>
     {% endif %}
     Sivu {{ page }} / {{ page_count }}
     {% if page < page_count %}
-    <a href="/user/bookclubs/{{ user.id }}/page/{{ page + 1 }}">&gt;</a>
-    <a href="/user/bookclubs/{{ user.id }}/page/{{ page_count }}">&gt;&gt;</a>
+    <span class="page_navi">
+        <a id="next_prev" href="/user/bookclubs/{{ user.id }}/page/{{ page + 1 }}">&gt;</a></span>
+    <span class="page_navi">
+        <a id="next_prev" href="/user/bookclubs/{{ user.id }}/page/{{ page_count }}">&gt;&gt;</a></span>
     {% endif %}
 </p>
 {% endif %}

@@ -57,15 +57,19 @@
 {% endfor %}
 
 {% if page_count > 1 %}
-<p>
+<p style="font-size: 13px;">
     {% if page > 1 %}
-    <a href="/search?query={{ query }}&query_from={{ q_from }}&page=1">&lt;&lt;</a>
-    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page - 1 }}">&lt;</a>
+    <span class="page_navi">
+        <a id="next_prev" href="/search?query={{ query }}&query_from={{ q_from }}&page=1">&lt;&lt;</a></span>
+    <span class="page_navi">
+        <a id="next_prev" href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page - 1 }}">&lt;</a></span>
     {% endif %}
     Sivu {{ page }} / {{ page_count }}
     {% if page < page_count %}
-    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page + 1 }}">&gt;</a>
-    <a href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page_count }}">&gt;&gt;</a>
+    <span class="page_navi">
+        <a id="next_prev" href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page + 1 }}">&gt;</a></span>
+    <span class="page_navi">
+        <a id="next_prev" href="/search?query={{ query }}&query_from={{ q_from }}&page={{ page_count }}">&gt;&gt;</a></span>
     {% endif %}
 </p>
 {% endif %}

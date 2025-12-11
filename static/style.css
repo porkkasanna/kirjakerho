@@ -205,3 +205,20 @@ table {
     text-align: center;
     text-shadow: 0px 0px 5px rgb(78, 53, 100);
 }
+
+.page_navi {
+    margin: 2px 0px;
+    padding: 4px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(163, 185, 156);
+    border-radius: 8px;
+    background-color: rgb(190, 207, 185);
+}
+
+#next_prev, #next_prev:hover {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 13px;
+    color: rgb(54, 83, 45);
+    text-decoration: none;
+}
