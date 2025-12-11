@@ -1,13 +1,14 @@
 from flask import Flask
-from flask import abort, flash, make_response, render_template, redirect, request, session
+from flask import abort, flash, g, make_response, render_template, redirect, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
-from time import strftime, localtime
+from time import time, strftime, localtime
 
 import markupsafe
 import sqlite3
 import config
 import secrets
 import math
+import re
 
 import db
 import clubs
@@ -50,8 +51,9 @@ def index(page=1):
         return redirect("/" + str(page_count))
 
     bookclubs = clubs.get_clubs(page, page_size)
+    now = strftime("%Y-%m-%d", localtime())
     
-    return render_template("index.html", bookclubs=bookclubs, page=page, page_count=page_count)
+    return render_template("index.html", bookclubs=bookclubs, page=page, page_count=page_count, now=now)
 
 @app.route("/search")
 def search():
@@ -262,10 +264,15 @@ def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     if not bookclub:
         not_found()
+    
+    pattern = r"(\d+)-(\d+)-(\d+)"
+    replacement = r"\3.\2.\1."
+    deadline = re.sub(pattern, replacement, bookclub["deadline"])
+
     review_count = clubs.review_count(club_id)
     reviews = clubs.get_reviews(club_id)
     classes = clubs.get_classes(club_id)
-    return render_template("show_club.html", bookclub=bookclub, reviews=reviews, review_count=review_count, classes=classes)
+    return render_template("show_club.html", bookclub=bookclub, deadline=deadline, reviews=reviews, review_count=review_count, classes=classes)
 
 @app.route("/user/bookclubs/<int:user_id>")
 @app.route("/user/bookclubs/<int:user_id>/page/<int:page>")
@@ -347,6 +354,10 @@ def remove_club(club_id):
 @app.route("/new_review", methods=["POST"])
 def new_review():
     require_login()
+    closed = request.form["closed"]
+    
+    if closed == 1:
+        forbidden()
 
     stars = request.form["stars"]
     content = request.form["content"]
@@ -416,7 +427,7 @@ def edit_review(review_id):
         
         if "back" not in request.form:
             clubs.update_review(review_id, stars, content, modified_at)
-            
+
         return redirect("/bookclub/" + str(review["club_id"]))
 
 @app.route("/remove_review/<int:review_id>", methods=["GET", "POST"])

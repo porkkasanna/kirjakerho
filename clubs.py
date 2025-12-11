@@ -1,3 +1,4 @@
+from time import strftime, localtime
 import db
 
 def get_clubs(page, page_size):
@@ -11,11 +12,25 @@ def get_clubs(page, page_size):
     return db.query(sql, [limit, offset])
 
 def get_club(club_id):
-    sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username
+    check_if_open(club_id)
+    sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username, b.closed
              FROM bookclubs b, users u
              WHERE b.user_id = u.id AND b.id = ?"""
     result = db.query(sql, [club_id])
     return result[0] if result else None
+
+def check_if_open(club_id):
+    now = strftime("%Y-%m-%d", localtime())
+    sql = "SELECT deadline, closed FROM bookclubs WHERE id = ?"
+    result = db.query(sql, [club_id])
+    closed = result[0][1]
+    deadline = result[0][0]
+
+    if closed == 1:
+        return
+    if deadline < now:
+        sql = "UPDATE bookclubs SET closed = 1 WHERE id = ?"
+        db.execute(sql, [club_id])
 
 def club_count():
     sql = "SELECT COUNT(id) FROM bookclubs"

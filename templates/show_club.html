@@ -14,7 +14,11 @@
     Kirjoittanut {{ bookclub.author }}
 </p>
 <p>
-    Viimeinen osallistumispäivä on {{ bookclub.deadline }}
+    {% if bookclub.closed == 1 %}
+    Viimeinen osallistumispäivä oli {{ deadline }} Kirjakerho on sulkeutunut.
+    {% else %}
+    Viimeinen osallistumispäivä on {{ deadline }}
+    {% endif %}
 </p>
 <p>
     Kirjakerhon omistaja &ndash; <a href="/user/{{ bookclub.user_id }}">{{ bookclub.username }}</a>
@@ -70,7 +74,7 @@
 <p>Kirjakerholla ei vielä ole arvosteluja.</p>
 {% endif %}
 
-{% if session.username %}
+{% if session.username and bookclub.closed != 1 %}
 <h2>Lähetä arvostelu</h2>
 
 <form action="/new_review" method="post">
@@ -97,6 +101,7 @@
             cols="40"></textarea>
     </p>
     <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
+    <input type="hidden" name="closed" value="{{ bookclub.closed }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä" />
 </form>

@@ -11,7 +11,7 @@ CREATE TABLE bookclubs (
     title TEXT NOT NULL,
     author TEXT,
     deadline TEXT,
-    closed INTEGER,
+    closed INTEGER DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
