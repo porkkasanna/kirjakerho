@@ -32,7 +32,7 @@
 {% for review in reviews %}
 <div class="box" id="{{ review.id }}">
     <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
-        {% if review.modified_at != "0" %}
+        {% if review.modified_at %}
         </br><em>muokattu {{ review.modified_at }}</em>
         {% endif %}
     </p>
@@ -94,8 +94,7 @@
             type="text"
             name="content"
             rows="5"
-            cols="40">
-        </textarea>
+            cols="40"></textarea>
     </p>
     <input type="hidden" name="club_id" value="{{ bookclub.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

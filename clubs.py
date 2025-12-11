@@ -128,9 +128,9 @@ def review_count(club_id):
     return result[0][0] if result else None
 
 def add_review(stars, content, club_id, user_id, sent_at):
-    sql = """INSERT INTO reviews (stars, content, club_id, user_id, sent_at, modified_at)
-             VALUES (?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [stars, content, club_id, user_id, sent_at, 0])
+    sql = """INSERT INTO reviews (stars, content, club_id, user_id, sent_at)
+             VALUES (?, ?, ?, ?, ?)"""
+    db.execute(sql, [stars, content, club_id, user_id, sent_at])
 
 def update_review(review_id, stars, content, modified_at):
     sql = """UPDATE reviews

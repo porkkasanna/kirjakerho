@@ -414,7 +414,9 @@ def edit_review(review_id):
         if not stars or not content:
             forbidden()
         
-        clubs.update_review(review_id, stars, content, modified_at)
+        if "back" not in request.form:
+            clubs.update_review(review_id, stars, content, modified_at)
+            
         return redirect("/bookclub/" + str(review["club_id"]))
 
 @app.route("/remove_review/<int:review_id>", methods=["GET", "POST"])
