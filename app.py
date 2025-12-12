@@ -40,6 +40,7 @@ def show_lines(content):
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
+    session["return_url"] = "/"
     page_size = 10
     club_count = clubs.club_count()
     page_count = math.ceil(club_count / page_size)
@@ -57,6 +58,7 @@ def index(page=1):
 
 @app.route("/search")
 def search():
+    session["return_url"] = "/search"
     query = request.args.get("query")
     query_from = request.args.get("query_from")
     page = request.args.get("page")
@@ -113,6 +115,7 @@ def create_user():
 
 @app.route("/remove_user/<int:user_id>", methods=["GET", "POST"])
 def remove_user(user_id):
+    session["return_url"] = None
     require_login()
     user = users.get_user(user_id)
 
@@ -135,6 +138,7 @@ def remove_user(user_id):
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
+    session["return_url"] = "/user/" + str(user_id)
     user = users.get_user(user_id)
     if not user:
         not_found()
@@ -149,6 +153,7 @@ def show_user(user_id):
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
+    session["return_url"] = None
     require_login()
 
     if request.method == "GET":
@@ -215,7 +220,9 @@ def login():
             session["username"] = username
             session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
-            flash("Sisäänkirjautuminen onnistui", "message")
+            flash("Sisäänkirjautuminen onnistui", "login")
+            if session["return_url"]:
+                return redirect(session["return_url"])
             return redirect("/")
 
         flash("Väärä käyttäjätunnus tai salasana", "error")
@@ -226,10 +233,12 @@ def logout():
     del session["username"]
     del session["user_id"]
     del session["csrf_token"]
+    session["return_url"] = None
     return redirect("/")
 
 @app.route("/create_club", methods=["POST", "GET"])
 def create_club():
+    session["return_url"] = None
     require_login()
 
     if request.method == "GET":
@@ -262,6 +271,7 @@ def create_club():
 
 @app.route("/bookclub/<int:club_id>")
 def show_club(club_id):
+    session["return_url"] = "/bookclub/" + str(club_id)
     bookclub = clubs.get_club(club_id)
     if not bookclub:
         not_found()
@@ -286,6 +296,8 @@ def show_club(club_id):
 @app.route("/user/bookclubs/<int:user_id>")
 @app.route("/user/bookclubs/<int:user_id>/page/<int:page>")
 def show_user_clubs(user_id, page=1):
+    session["return_url"] = ("/user/bookclubs/" + str(user_id) +
+                             "/page/" + str(page))
     page_size = 10
     club_count = users.club_count(user_id)
     page_count = math.ceil(club_count / page_size)
@@ -305,6 +317,7 @@ def show_user_clubs(user_id, page=1):
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
+    session["return_url"] = None
     require_login()
     bookclub = clubs.get_club(club_id)
     all_classes = clubs.get_all_classes()
@@ -344,6 +357,7 @@ def edit_club(club_id):
 
 @app.route("/remove_club/<int:club_id>", methods=["GET", "POST"])
 def remove_club(club_id):
+    session["return_url"] = None
     require_login()
     bookclub = clubs.get_club(club_id)
 
@@ -385,6 +399,8 @@ def new_review():
 @app.route("/bookclub/reviews/<int:club_id>")
 @app.route("/bookclub/reviews/<int:club_id>/page/<int:page>")
 def show_reviews(club_id, page=1):
+    session["return_url"] = ("/bookclub/reviews/" + str(club_id) +
+                             "/page/" + str(page))
     page_size = 10
     review_count = clubs.review_count(club_id)
     page_count = math.ceil(review_count / page_size)
@@ -404,6 +420,8 @@ def show_reviews(club_id, page=1):
 @app.route("/user/reviews/<int:user_id>")
 @app.route("/user/reviews/<int:user_id>/page/<int:page>")
 def show_user_reviews(user_id, page=1):
+    session["return_url"] = ("/user/reviews/" + str(user_id) +
+                             "/page/" + str(page))
     page_size = 10
     review_count = users.review_count(user_id)
     page_count = math.ceil(review_count / page_size)
@@ -422,6 +440,7 @@ def show_user_reviews(user_id, page=1):
 
 @app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
 def edit_review(review_id):
+    session["return_url"] = None
     require_login()
     review = clubs.get_review(review_id)
 
@@ -449,6 +468,7 @@ def edit_review(review_id):
 
 @app.route("/remove_review/<int:review_id>", methods=["GET", "POST"])
 def remove_review(review_id):
+    session["return_url"] = None
     require_login()
     review = clubs.get_review(review_id)
 

@@ -26,6 +26,11 @@
     </div>
 
     <div class="content">
+        {% for message in get_flashed_messages(category_filter=["login"]) %}
+        <div class="message">
+            {{ message }}
+        </div>
+        {% endfor %}
         {% block content %}{% endblock %}
     </div>
 </body>
