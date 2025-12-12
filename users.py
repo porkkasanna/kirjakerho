@@ -63,6 +63,20 @@ def get_reviews(user_id, page=1, page_size=5):
     offset = page_size * (page - 1)
     return db.query(sql, [user_id, limit, offset])
 
+def get_user_review(club_id, user_id):
+    sql = """SELECT
+                r.id,
+                r.stars,
+                r.content,
+                r.sent_at,
+                r.modified_at,
+                r.user_id,
+                u.username
+             FROM reviews r, users u
+             WHERE r.user_id = u.id AND r.club_id = ? AND r.user_id = ?"""
+    result = db.query(sql, [club_id, user_id])
+    return result[0] if result else None
+
 def review_count(user_id):
     sql = "SELECT COUNT(id) FROM reviews WHERE user_id = ?"
     result = db.query(sql, [user_id])

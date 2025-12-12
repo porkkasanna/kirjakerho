@@ -9,7 +9,13 @@
 {% if reviews %}
 {% for review in reviews %}
 <div class="box">
-    <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}</p>
+    <p style="float: right; font-size: 13px; text-align: right;">
+        {% if review.modified_at %}
+            {{ review.modified_at }}
+        {% else %}
+            {{ review.sent_at }}
+        {% endif %}
+    </p>
     <p>
         {% if review.stars == 5 %}
         ★★★★★

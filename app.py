@@ -270,12 +270,18 @@ def show_club(club_id):
     replacement = r"\3.\2.\1."
     deadline = re.sub(pattern, replacement, bookclub["deadline"])
 
+    try:
+        user_review = users.get_user_review(club_id, session["user_id"])
+    except KeyError:
+        user_review = None
+
     review_count = clubs.review_count(club_id)
     reviews = clubs.get_reviews(club_id)
+    
     classes = clubs.get_classes(club_id)
     return render_template("show_club.html", bookclub=bookclub, deadline=deadline,
                            reviews=reviews, review_count=review_count,
-                           classes=classes)
+                           classes=classes, user_review=user_review)
 
 @app.route("/user/bookclubs/<int:user_id>")
 @app.route("/user/bookclubs/<int:user_id>/page/<int:page>")
@@ -365,12 +371,14 @@ def new_review():
     if closed == 1:
         forbidden()
 
-    stars = request.form["stars"]
-    content = request.form["content"]
     club_id = request.form["club_id"]
     user_id = session["user_id"]
-    sent_at = time.strftime("%d.%m.%Y, kello %H:%M", time.localtime())
+    if users.get_user_review(club_id, user_id):
+        forbidden()
 
+    stars = request.form["stars"]
+    content = request.form["content"]
+    sent_at = time.strftime("%d.%m.%Y, kello %H:%M", time.localtime())
     clubs.add_review(stars, content, club_id, user_id, sent_at)
     return redirect("/bookclub/" + str(club_id))
 

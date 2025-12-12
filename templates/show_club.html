@@ -32,8 +32,39 @@
 
 <h2>Arvostelut</h2>
 
+{% if user_review and user_review.user_id == session.user_id %}
+<div class="box">
+    <p style="float: right; font-size: 13px; text-align: right;">{{ user_review.sent_at }}
+        {% if user_review.modified_at %}
+        </br><em>muokattu {{ user_review.modified_at }}</em>
+        {% endif %}
+    </p>
+    <p style="font-size: 18px; font-weight: bold;">Minun arvosteluni</p>
+    <p style="font-size: 20px;">
+        {% if user_review.stars == 5 %}
+        ★★★★★
+        {% elif user_review.stars == 4 %}
+        ★★★★☆
+        {% elif user_review.stars == 3 %}
+        ★★★☆☆
+        {% elif user_review.stars == 2 %}
+        ★★☆☆☆
+        {% elif user_review.stars == 1 %}
+        ★☆☆☆☆
+        {% endif %}
+    </p>
+    <p>{{ user_review.content | show_lines }} </p>
+    <p style="font-size: 13px;">
+        <a href="/edit_review/{{ user_review.id }}">Muokkaa</a> |
+        <a href="/remove_review/{{ user_review.id }}">Poista</a>
+    </p>
+</div>
+</br>
+{% endif %}
+
 {% if reviews %}
 {% for review in reviews %}
+{% if not user_review or user_review.id != review.id %}
 <div class="box" id="{{ review.id }}">
     <p style="float: right; font-size: 13px; text-align: right;">{{ review.sent_at }}
         {% if review.modified_at %}
@@ -53,17 +84,12 @@
         ★☆☆☆☆
         {% endif %}
     </p>
-    <p>{{ review.content| show_lines }} </p>
+    <p>{{ review.content | show_lines }} </p>
     <p>
         &ndash; <a href="/user/{{ review.user_id }}">{{ review.username }}</a>
     </p>
-    {% if review.user_id == session.user_id %}
-    <p style="font-size: 13px;">
-        <a href="/edit_review/{{ review.id }}">Muokkaa</a> |
-        <a href="/remove_review/{{ review.id }}">Poista</a>
-    </p>
-    {% endif %}
 </div>
+{% endif %}
 {% endfor %}
 <p>
     {% if review_count > 5 %}
@@ -74,9 +100,26 @@
 <p>Kirjakerholla ei vielä ole arvosteluja.</p>
 {% endif %}
 
-{% if session.username and bookclub.closed != 1 %}
 <h2>Lähetä arvostelu</h2>
 
+{% if bookclub.closed == 1 %}
+<p>
+    Kirjakerho on sulkeutunut, eikä siihen voi lähettää enää arvosteluja.
+</p>
+{% else %}
+    {% if not session.username %}
+    <p>
+        <a href="/login">Kirjaudu sisään</a> lähettääksesi arvostelun.
+    </p>
+    {% endif %}
+    {% if session.username and user_review %}
+    <p>
+        Olet jo lähettänyt arvostelun tähän kirjakerhoon.
+    </p>
+    {% endif %}
+{% endif %}
+
+{% if session.username and bookclub.closed != 1  and not user_review%}
 <form action="/new_review" method="post">
     <p>
         Tähdet: <br />
