@@ -23,7 +23,13 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_clubs(user_id, page=1, page_size=5):
-    sql = """SELECT b.id, b.title, b.author, b.user_id, u.username
+    sql = """SELECT
+                b.id,
+                b.title,
+                b.author,
+                b.user_id,
+                u.username,
+                b.deadline
              FROM bookclubs b, users u
              WHERE b.user_id = u.id AND u.id = ?
              ORDER BY b.id DESC

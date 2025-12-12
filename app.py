@@ -142,9 +142,10 @@ def show_user(user_id):
     club_count = users.club_count(user_id)
     reviews = users.get_reviews(user_id)
     review_count = users.review_count(user_id)
+    now = time.strftime("%Y-%m-%d", time.localtime())
     return render_template("user.html", user=user, bookclubs=bookclubs,
                            club_count=club_count, reviews=reviews,
-                           review_count=review_count)
+                           review_count=review_count, now=now)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
@@ -292,8 +293,9 @@ def show_user_clubs(user_id, page=1):
 
     user = users.get_user(user_id)
     bookclubs = users.get_clubs(user_id, page, page_size)
+    now = time.strftime("%Y-%m-%d", time.localtime())
     return render_template("user_clubs.html", bookclubs=bookclubs, user=user,
-                           page=page, page_count=page_count)
+                           page=page, page_count=page_count, now=now)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
