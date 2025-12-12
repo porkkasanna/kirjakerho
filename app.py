@@ -178,12 +178,18 @@ def add_image_default():
     check_csrf()
     user_id = session["user_id"]
     filename = "static/" + request.form["image"]
+    pattern = r"^static/image((0[1-9])|(1[0-9])|20)\.png$"
+    filename_matches = re.fullmatch(pattern, filename)
 
-    with open(filename, "rb") as file:
-        image = file.read()
+    if filename_matches:
+        with open(filename, "rb") as file:
+            image = file.read()
 
-    users.update_image(user_id, image)
-    return redirect("/user/" + str(user_id))
+        users.update_image(user_id, image)
+        return redirect("/user/" + str(user_id))
+
+    flash("Tiedostoa ei löydy", "error")
+    return redirect("/add_image")
 
 @app.route("/image/<int:user_id>")
 def show_image(user_id):
