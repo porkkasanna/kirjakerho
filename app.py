@@ -202,30 +202,23 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        sql = "SELECT password_hash FROM users WHERE username = ?"
+        user_id = users.login(username, password)
 
-        try:
-            password_hash = db.query(sql, [username])[0][0]
-        except IndexError:
-            flash("Väärä käyttäjätunnus tai salasana", "error")
-            return redirect("/login")
-
-        if check_password_hash(password_hash, password):
+        if user_id:
             session["username"] = username
-            sql = "SELECT id FROM users WHERE username = ?"
-            user_id = db.query(sql, [username])[0][0]
             session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
             flash("Sisäänkirjautuminen onnistui", "message")
             return redirect("/")
-        else:
-            flash("Väärä käyttäjätunnus tai salasana", "error")
-            return redirect("/login")
+
+        flash("Väärä käyttäjätunnus tai salasana", "error")
+        return redirect("/login")
 
 @app.route("/logout")
 def logout():
     del session["username"]
     del session["user_id"]
+    del session["csrf_token"]
     return redirect("/")
 
 @app.route("/create_club", methods=["POST", "GET"])

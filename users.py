@@ -1,5 +1,19 @@
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 import db
+
+def login(username, password):
+    sql = "SELECT password_hash, id FROM users WHERE username = ?"
+    try:
+        result = db.query(sql, [username])
+        password_hash = result[0]["password_hash"]
+    except IndexError:
+        return None
+
+    if check_password_hash(password_hash, password):
+        user_id = result[0]["id"]
+        return user_id
+
+    return None
 
 def get_user(user_id):
     sql = """SELECT id, username, image IS NOT NULL has_image
