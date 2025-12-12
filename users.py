@@ -24,8 +24,17 @@ def club_count(user_id):
     return result[0][0] if result else None
 
 def get_reviews(user_id, page=1, page_size=5):
-    sql = """SELECT r.id, r.stars, r.content, r.club_id, b.title club_title,
-                 b.author club_author, r.sent_at, r.modified_at, r.user_id, u.username
+    sql = """SELECT
+                r.id,
+                r.stars,
+                r.content,
+                r.club_id,
+                b.title club_title,
+                b.author club_author,
+                r.sent_at,
+                r.modified_at,
+                r.user_id,
+                u.username
              FROM reviews r, bookclubs b, users u
              WHERE u.id = ? AND r.user_id = u.id AND r.club_id = b.id
              ORDER BY r.id DESC

@@ -1,15 +1,15 @@
-from flask import Flask
-from flask import abort, flash, g, make_response, render_template, redirect, request, session
-from werkzeug.security import check_password_hash, generate_password_hash
-from time import time, strftime, localtime
-
-import markupsafe
 import sqlite3
-import config
 import secrets
 import math
 import re
+import time
 
+from flask import Flask
+from flask import abort, flash, g, make_response, render_template, redirect, request, session
+from werkzeug.security import check_password_hash, generate_password_hash
+import markupsafe
+
+import config
 import db
 import clubs
 import users
@@ -51,9 +51,9 @@ def index(page=1):
         return redirect("/" + str(page_count))
 
     bookclubs = clubs.get_clubs(page, page_size)
-    now = strftime("%Y-%m-%d", localtime())
-    
-    return render_template("index.html", bookclubs=bookclubs, page=page, page_count=page_count, now=now)
+    now = time.strftime("%Y-%m-%d", time.localtime())
+    return render_template("index.html", bookclubs=bookclubs, page=page,
+                           page_count=page_count, now=now)
 
 @app.route("/search")
 def search():
@@ -63,7 +63,7 @@ def search():
 
     if not page:
         page = 1
-    
+
     page = int(page)
     page_size = 10
     query_count = clubs.query_count(query, query_from)
@@ -74,7 +74,9 @@ def search():
         return redirect("/search")
 
     results = clubs.search(query, query_from, page, page_size) if query else []
-    return render_template("search.html", query=query, q_from=query_from, query_count=query_count, results=results, page=page, page_count=page_count)
+    return render_template("search.html", query=query, q_from=query_from,
+                           query_count=query_count, results=results, page=page,
+                           page_count=page_count)
 
 @app.route("/register")
 def register():
@@ -89,7 +91,7 @@ def create_user():
     if len(username) < 1:
         flash("Käyttäjätunnus on liian lyhyt", "error")
         return redirect("/register")
-    
+
     if len(password1) < 1:
         flash("Salasana on liian lyhyt", "error")
         return redirect("/register")
@@ -97,7 +99,7 @@ def create_user():
     if password1 != password2:
         flash("Salasanat eivät täsmää", "error")
         return redirect("/register")
-    
+
     password_hash = generate_password_hash(password1)
 
     try:
@@ -105,14 +107,13 @@ def create_user():
     except sqlite3.IntegrityError:
         flash("Käyttäjätunnus on varattu", "error")
         return redirect("/register")
-    
+
     flash("Käyttäjätunnus luotiin onnistuneesti")
     return redirect("/login")
 
 @app.route("/remove_user/<int:user_id>", methods=["GET", "POST"])
 def remove_user(user_id):
     require_login()
-
     user = users.get_user(user_id)
 
     if not user:
@@ -129,8 +130,8 @@ def remove_user(user_id):
         if "remove" in request.form:
             users.remove_user(user_id)
             return redirect("/logout")
-        else:
-            return redirect("/user/" + str(user_id))
+
+    return redirect("/user/" + str(user_id))
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -141,7 +142,9 @@ def show_user(user_id):
     club_count = users.club_count(user_id)
     reviews = users.get_reviews(user_id)
     review_count = users.review_count(user_id)
-    return render_template("user.html", user=user, bookclubs=bookclubs, club_count=club_count, reviews=reviews, review_count=review_count)
+    return render_template("user.html", user=user, bookclubs=bookclubs,
+                           club_count=club_count, reviews=reviews,
+                           review_count=review_count)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
@@ -149,7 +152,7 @@ def add_image():
 
     if request.method == "GET":
         return render_template("add_image.html")
-    
+
     if request.method == "POST":
         require_login()
         check_csrf()
@@ -163,17 +166,16 @@ def add_image():
         if not file.filename.endswith(".png"):
             flash("Väärä tiedostomuoto. Käytä PNG-muotoista kuvaa.", "error")
             return render_template("add_image.html")
-        
+
         image = file.read()
-        
         users.update_image(user_id, image)
-        return redirect("/user/" + str(user_id))
+
+    return redirect("/user/" + str(user_id))
 
 @app.route("/add_image_default", methods=["POST"])
 def add_image_default():
     require_login()
     check_csrf()
-
     user_id = session["user_id"]
     filename = "static/" + request.form["image"]
 
@@ -181,7 +183,6 @@ def add_image_default():
         image = file.read()
 
     users.update_image(user_id, image)
-
     return redirect("/user/" + str(user_id))
 
 @app.route("/image/<int:user_id>")
@@ -201,8 +202,8 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
         sql = "SELECT password_hash FROM users WHERE username = ?"
+
         try:
             password_hash = db.query(sql, [username])[0][0]
         except IndexError:
@@ -264,7 +265,7 @@ def show_club(club_id):
     bookclub = clubs.get_club(club_id)
     if not bookclub:
         not_found()
-    
+
     pattern = r"(\d+)-(\d+)-(\d+)"
     replacement = r"\3.\2.\1."
     deadline = re.sub(pattern, replacement, bookclub["deadline"])
@@ -272,7 +273,9 @@ def show_club(club_id):
     review_count = clubs.review_count(club_id)
     reviews = clubs.get_reviews(club_id)
     classes = clubs.get_classes(club_id)
-    return render_template("show_club.html", bookclub=bookclub, deadline=deadline, reviews=reviews, review_count=review_count, classes=classes)
+    return render_template("show_club.html", bookclub=bookclub, deadline=deadline,
+                           reviews=reviews, review_count=review_count,
+                           classes=classes)
 
 @app.route("/user/bookclubs/<int:user_id>")
 @app.route("/user/bookclubs/<int:user_id>/page/<int:page>")
@@ -285,11 +288,13 @@ def show_user_clubs(user_id, page=1):
     if page < 1:
         return redirect("/user/bookclubs/" + str(user_id) + "/page/1")
     if page > page_count:
-        return redirect("/user/bookclubs/" + str(user_id) + "/page/" + str(page_count))
-    
+        return redirect("/user/bookclubs/" + str(user_id) +
+                        "/page/" + str(page_count))
+
     user = users.get_user(user_id)
     bookclubs = users.get_clubs(user_id, page, page_size)
-    return render_template("user_clubs.html", bookclubs=bookclubs, user=user, page=page, page_count=page_count)
+    return render_template("user_clubs.html", bookclubs=bookclubs, user=user,
+                           page=page, page_count=page_count)
 
 @app.route("/edit_club/<int:club_id>", methods=["GET", "POST"])
 def edit_club(club_id):
@@ -304,7 +309,8 @@ def edit_club(club_id):
         forbidden()
 
     if request.method == "GET":
-        return render_template("edit_club.html", bookclub=bookclub, all_classes=all_classes, classes=club_classes)
+        return render_template("edit_club.html", bookclub=bookclub,
+                               all_classes=all_classes, classes=club_classes)
 
     if request.method == "POST":
         require_login()
@@ -319,7 +325,7 @@ def edit_club(club_id):
             forbidden()
         if not deadline:
             deadline = bookclub["deadline"]
-        
+
         classes = []
         for entry in request.form.getlist("classes"):
             if entry:
@@ -348,14 +354,13 @@ def remove_club(club_id):
         if "remove" in request.form:
             clubs.remove_club(club_id)
             return redirect("/")
-        else:
-            return redirect("/bookclub/" + str(club_id))
+
+        return redirect("/bookclub/" + str(club_id))
 
 @app.route("/new_review", methods=["POST"])
 def new_review():
     require_login()
     closed = request.form["closed"]
-    
     if closed == 1:
         forbidden()
 
@@ -363,7 +368,7 @@ def new_review():
     content = request.form["content"]
     club_id = request.form["club_id"]
     user_id = session["user_id"]
-    sent_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
+    sent_at = time.strftime("%d.%m.%Y, kello %H:%M", time.localtime())
 
     clubs.add_review(stars, content, club_id, user_id, sent_at)
     return redirect("/bookclub/" + str(club_id))
@@ -379,11 +384,13 @@ def show_reviews(club_id, page=1):
     if page < 1:
         return redirect("/bookclub/reviews/" + str(club_id) + "/page/1")
     if page > page_count:
-        return redirect("/bookclub/reviews/" + str(club_id) + "/page/" + str(page_count))
-    
+        return redirect("/bookclub/reviews/" + str(club_id) +
+                        "/page/" + str(page_count))
+
     bookclub = clubs.get_club(club_id)
     reviews = clubs.get_reviews(club_id, page, page_size)
-    return render_template("reviews.html", reviews=reviews, bookclub=bookclub, page=page, page_count=page_count)
+    return render_template("reviews.html", reviews=reviews, bookclub=bookclub,
+                           page=page, page_count=page_count)
 
 @app.route("/user/reviews/<int:user_id>")
 @app.route("/user/reviews/<int:user_id>/page/<int:page>")
@@ -396,11 +403,13 @@ def show_user_reviews(user_id, page=1):
     if page < 1:
         return redirect("/user/reviews/" + str(user_id) + "/page/1")
     if page > page_count:
-        return redirect("/user/reviews/" + str(user_id) + "/page/" + str(page_count))
-    
+        return redirect("/user/reviews/" + str(user_id) +
+                        "/page/" + str(page_count))
+
     user = users.get_user(user_id)
     reviews = users.get_reviews(user_id, page, page_size)
-    return render_template("user_reviews.html", reviews=reviews, user=user, page=page, page_count=page_count)
+    return render_template("user_reviews.html", reviews=reviews, user=user,
+                           page=page, page_count=page_count)
 
 @app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
 def edit_review(review_id):
@@ -411,20 +420,19 @@ def edit_review(review_id):
         not_found()
     if review["user_id"] != session["user_id"]:
         forbidden()
-    
+
     if request.method == "GET":
         return render_template("edit_review.html", review=review)
-    
+
     if request.method == "POST":
         require_login()
         check_csrf()
         stars = request.form["stars"]
         content = request.form["content"]
-        modified_at = strftime("%d.%m.%Y, kello %H:%M", localtime())
+        modified_at = time.strftime("%d.%m.%Y, kello %H:%M", time.localtime())
 
         if not stars or not content:
             forbidden()
-        
         if "back" not in request.form:
             clubs.update_review(review_id, stars, content, modified_at)
 

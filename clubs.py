@@ -2,7 +2,13 @@ from time import strftime, localtime
 import db
 
 def get_clubs(page, page_size):
-    sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username
+    sql = """SELECT
+                b.id,
+                b.title,
+                b.author,
+                b.deadline,
+                b.user_id,
+                u.username
              FROM bookclubs b JOIN users u ON b.user_id = u.id
              GROUP BY b.id
              ORDER BY b.id DESC
@@ -13,7 +19,14 @@ def get_clubs(page, page_size):
 
 def get_club(club_id):
     check_if_open(club_id)
-    sql = """SELECT b.id, b.title, b.author, b.deadline, b.user_id, u.username, b.closed
+    sql = """SELECT
+                b.id,
+                b.title,
+                b.author,
+                b.deadline,
+                b.user_id,
+                u.username,
+                b.closed
              FROM bookclubs b, users u
              WHERE b.user_id = u.id AND b.id = ?"""
     result = db.query(sql, [club_id])
@@ -44,8 +57,8 @@ def add_club(user_id, title, author, deadline, classes):
     club_id = db.last_insert_id()
 
     sql = "INSERT INTO club_classes (club_id, title, value) VALUES (?, ?, ?)"
-    for title, value in classes:
-        db.execute(sql, [club_id, title, value])
+    for class_title, class_value in classes:
+        db.execute(sql, [club_id, class_title, class_value])
 
     return club_id
 
@@ -60,8 +73,8 @@ def update_club(club_id, title, author, deadline, classes):
         db.execute(sql, [club_id])
 
         sql = "INSERT INTO club_classes (club_id, title, value) VALUES (?, ?, ?)"
-        for title, value in classes:
-            db.execute(sql, [club_id, title, value])
+        for class_title, class_value in classes:
+            db.execute(sql, [club_id, class_title, class_value])
 
 def remove_club(club_id):
     sql = "DELETE FROM bookclubs WHERE id = ?"
@@ -79,12 +92,12 @@ def query_count(query, query_from):
                  FROM bookclubs b, users u
                  WHERE b.user_id = u.id AND u.username LIKE ?"""
     elif query_from == "genre":
-        sql = """SELECT COUNT(b.id) 
+        sql = """SELECT COUNT(b.id)
                  FROM bookclubs b, club_classes c
                  WHERE c.club_id = b.id AND c.value LIKE ?"""
     else:
         return 0
-    
+
     like = "%" + query + "%"
     result = db.query(sql, [like])
     return result[0][0] if query else None
@@ -92,7 +105,7 @@ def query_count(query, query_from):
 def search(query, query_from, page, page_size):
     sql = """SELECT b.id, b.title, b.author, u.username
              FROM bookclubs b, users u """
-    
+
     if query_from == "title":
         sql = sql + """WHERE b.user_id = u.id AND b.title LIKE ?
                        ORDER BY b.id DESC
@@ -114,14 +127,21 @@ def search(query, query_from, page, page_size):
                     c.value LIKE ?
                  ORDER BY b.id DESC
                  LIMIT ? OFFSET ?"""
-    
+
     limit = page_size
     offset = page_size * (page - 1)
     like = "%" + query + "%"
     return db.query(sql, [like, limit, offset])
 
 def get_reviews(club_id, page=1, page_size=5):
-    sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.user_id, u.username
+    sql = """SELECT
+                r.id,
+                r.stars,
+                r.content,
+                r.sent_at,
+                r.modified_at,
+                r.user_id,
+                u.username
              FROM reviews r, users u
              WHERE r.user_id = u.id AND r.club_id = ?
              ORDER BY r.id DESC
@@ -131,7 +151,15 @@ def get_reviews(club_id, page=1, page_size=5):
     return db.query(sql, [club_id, limit, offset])
 
 def get_review(review_id):
-    sql = """SELECT r.id, r.stars, r.content, r.sent_at, r.modified_at, r.club_id, r.user_id, u.username
+    sql = """SELECT
+                r.id,
+                r.stars,
+                r.content,
+                r.sent_at,
+                r.modified_at,
+                r.club_id,
+                r.user_id,
+                u.username
              FROM reviews r, users u
              WHERE r.id = ? AND u.id = r.user_id"""
     result = db.query(sql, [review_id])
@@ -166,7 +194,7 @@ def get_all_classes():
         if title not in classes:
             classes[title] = []
         classes[title].append(value)
-    
+
     return classes
 
 def get_classes(club_id):
