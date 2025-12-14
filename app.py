@@ -6,11 +6,10 @@ import time
 
 from flask import Flask
 from flask import abort, flash, g, make_response, render_template, redirect, request, session
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 import markupsafe
 
 import config
-import db
 import clubs
 import users
 
@@ -297,7 +296,7 @@ def show_club(club_id):
 
     review_count = clubs.review_count(club_id)
     reviews = clubs.get_reviews(club_id)
-    
+
     classes = clubs.get_classes(club_id)
     return render_template("show_club.html", bookclub=bookclub, deadline=deadline,
                            reviews=reviews, review_count=review_count,
