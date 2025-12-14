@@ -34,7 +34,7 @@
     <br/><br/><br/><br/><br/><br/>
     <p>
         <label for="deadline">Viimeinen osallistumispäivä:</label> <br />
-        <input id="deadline" type="date" name="deadline" />
+        <input id="deadline" type="date" name="deadline" required />
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Luo kirjakerho" />
