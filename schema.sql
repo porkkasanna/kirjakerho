@@ -40,3 +40,8 @@ CREATE TABLE reviews (
     FOREIGN KEY (club_id) REFERENCES bookclubs(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_club_reviews ON reviews (club_id);
+CREATE INDEX idx_user_reviews ON reviews (user_id);
+CREATE INDEX idx_user_clubs ON bookclubs (user_id);
+CREATE INDEX idx_club_genres ON club_classes (club_id);
