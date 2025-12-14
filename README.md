@@ -5,11 +5,13 @@
 * käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen
 * käyttäjä pystyy lisäämään, muokkaamaan ja poistamaan ilmoituksia kirjakerhoista
 * käyttäjä pystyy luokitella kirjakerhon kirjan genret
-* käyttäjä näkee muiden luomat ilmoitukset
-* käyttäjä pystyy antamaan arvosteluja kirjakerhojen kirjoille
-* käyttäjä pystyy etsimään ilmoituksia hakusanalla
-* käyttäjä pystyy etsimään ilmoituksia genren perusteella (ei vielä toiminnassa)
-* kullekin käyttäjälle on käyttäjäsivut, josta löytyy mm. käyttäjän omat kirjakerhot ja arvostelut
+* käyttäjä näkee muiden luomat ilmoitukset kirjakerhoista
+* käyttäjä pystyy antamaan arvosteluja kirjakerhojen kirjoille, mikäli hän ei ole antanut aiemmin arvostelua samalle kirjakerholle ja mikäli kirjakerho on auki
+* käyttäjä pystyy määrittelemään viimeisen osallistumispäivän kirjakerholle, jonka jälkeen arvostelujen lähettäminen ei ole mahdollista
+* käyttäjä pystyy etsimään ilmoituksia hakusanalla liittyen kirjan nimeen, kirjailijaan, kirjakerhon lähettäneeseen käyttäjään tai genreihin
+* kullekin käyttäjälle on käyttäjäsivut, josta löytyy käyttäjän omat kirjakerhot ja arvostelut
+* käyttäjä pystyy lisäämään itselleen profiilikuvan joko omista tiedostoistaan tai valita valmiista kuvista
+* käyttäjä pystyy poistamaan tunnuksensa
 
 ## Tekijänoikeudet
 
@@ -27,6 +29,7 @@ Luo tietokannan taulut:
 $ sqlite3 database.db < schema.sql
 $ sqlite3 database.db < init.sql
 ```
+
 Käynnistä sovellus seuraavasti:
 
 ```
